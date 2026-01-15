@@ -35,54 +35,6 @@
             --font-sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         }
 
-        /* Craigslist Theme - Minimal and functional */
-        body[data-theme="craigslist"] {
-            --color-bg: #ffffff;
-            --color-surface: #ffffff;
-            --color-text: #000000;
-            --color-text-muted: #555555;
-            --color-border: #dddddd;
-            --color-sunrise: #0000ff;
-            --color-sunset: #800080;
-            --font-serif: serif;
-            --font-sans: sans-serif;
-        }
-
-        body[data-theme="craigslist"] .brand {
-            color: #800080;
-        }
-
-        body[data-theme="craigslist"] .location-name {
-            color: #800080;
-        }
-
-        body[data-theme="craigslist"] .sun-time-value {
-            color: #0000ff;
-        }
-
-        body[data-theme="craigslist"] .sun-time-row.sunrise .sun-time-value,
-        body[data-theme="craigslist"] .sun-time-row.sunset .sun-time-value {
-            color: #0000ff;
-        }
-
-        body[data-theme="craigslist"] .btn,
-        body[data-theme="craigslist"] .view-toggle-btn,
-        body[data-theme="craigslist"] .theme-toggle-btn {
-            color: #0000ff;
-        }
-
-        body[data-theme="craigslist"] .btn:hover,
-        body[data-theme="craigslist"] .view-toggle-btn:hover,
-        body[data-theme="craigslist"] .theme-toggle-btn:hover {
-            text-decoration: underline;
-        }
-
-        body[data-theme="craigslist"] .view-toggle-btn.active,
-        body[data-theme="craigslist"] .theme-toggle-btn.active {
-            color: #000000;
-            text-decoration: none;
-        }
-
         html, body {
             height: 100%;
             overflow: hidden;
@@ -216,103 +168,6 @@
 
         .view-toggle-btn.active + .view-toggle-btn {
             border-left: 2px outset var(--color-border);
-        }
-
-        /* Theme Menu Button */
-        .theme-menu-btn {
-            padding: 10px;
-            width: 38px;
-            height: 38px;
-            font-size: 0.8125rem;
-            font-family: var(--font-sans);
-            font-weight: 500;
-            border: 2px outset var(--color-border);
-            background: var(--color-surface);
-            cursor: pointer;
-            color: var(--color-text);
-            border-radius: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .theme-menu-btn:hover {
-            background: #cccccc;
-        }
-
-        .theme-menu-btn:active {
-            border-style: inset;
-            background: #bbbbbb;
-        }
-
-        /* Theme Menu Drawer */
-        .theme-menu-drawer {
-            position: absolute;
-            top: 68px;
-            right: 24px;
-            width: 180px;
-            background: var(--color-surface);
-            border: 2px outset var(--color-border);
-            box-shadow: 3px 3px 0 rgba(0,0,0,0.3);
-            display: none;
-            flex-direction: column;
-            z-index: 1000;
-        }
-
-        .theme-menu-drawer.open {
-            display: flex;
-        }
-
-        .theme-menu-header {
-            padding: 8px 12px;
-            font-size: 0.6875rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--color-text);
-            border-bottom: 2px groove var(--color-border);
-            background: var(--color-bg);
-        }
-
-        .theme-menu-item {
-            padding: 10px 12px;
-            font-size: 0.875rem;
-            font-family: var(--font-sans);
-            text-align: left;
-            border: none;
-            background: var(--color-surface);
-            cursor: pointer;
-            color: var(--color-text);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border-bottom: 1px solid var(--color-border);
-        }
-
-        .theme-menu-item:last-child {
-            border-bottom: none;
-        }
-
-        .theme-menu-item:hover {
-            background: var(--color-bg);
-        }
-
-        .theme-menu-item:active {
-            background: #bbbbbb;
-        }
-
-        .theme-menu-radio {
-            width: 12px;
-            height: 12px;
-            border: 2px inset var(--color-border);
-            border-radius: 50%;
-            background: white;
-            display: inline-block;
-        }
-
-        .theme-menu-item.active .theme-menu-radio {
-            background: var(--color-text);
-            border-style: outset;
         }
 
         /* Sidebar */
@@ -466,6 +321,149 @@
             background: #111111;
         }
 
+        /* Date Row & Expand Button */
+        .date-row {
+            background: var(--color-bg);
+        }
+
+        .date-row .sun-time-label {
+            color: var(--color-text);
+            font-weight: 500;
+        }
+
+        .expand-btn {
+            background: var(--color-surface);
+            border: 2px outset var(--color-border);
+            width: 28px;
+            height: 28px;
+            padding: 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text-muted);
+        }
+
+        .expand-btn:hover {
+            background: #cccccc;
+            color: var(--color-text);
+        }
+
+        .expand-btn:active {
+            border-style: inset;
+            background: #bbbbbb;
+        }
+
+        /* Yearly Modal */
+        .yearly-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .yearly-modal.open {
+            display: flex;
+        }
+
+        .yearly-modal-content {
+            background: var(--color-surface);
+            border: 2px outset var(--color-border);
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .yearly-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: var(--color-bg);
+            border-bottom: 2px groove var(--color-border);
+        }
+
+        .yearly-modal-title {
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .yearly-modal-close {
+            background: var(--color-surface);
+            border: 2px outset var(--color-border);
+            width: 28px;
+            height: 28px;
+            font-size: 1.25rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .yearly-modal-close:hover {
+            background: #cccccc;
+        }
+
+        .yearly-modal-close:active {
+            border-style: inset;
+            background: #bbbbbb;
+        }
+
+        .yearly-modal-body {
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .yearly-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+
+        .yearly-table thead {
+            position: sticky;
+            top: 0;
+            background: var(--color-bg);
+        }
+
+        .yearly-table th {
+            padding: 10px 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--color-border);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .yearly-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--color-border);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .yearly-table tr:hover td {
+            background: var(--color-bg);
+        }
+
+        .yearly-table tr.today td {
+            background: #ffffcc;
+            font-weight: 600;
+        }
+
         /* Map Container */
         .map-container {
             position: relative;
@@ -616,112 +614,6 @@
             color: #000000;
         }
 
-        body.apple-classic .menu-panel {
-            background: #ffffff;
-            border-left: 2px outset #c0c0c0;
-        }
-
-        body.apple-classic .menu-overlay {
-            background: rgba(0, 0, 0, 0.3);
-        }
-
-        /* CRAIGSLIST THEME */
-        body.craigslist {
-            background: #ffffff;
-        }
-
-        body.craigslist .header,
-        body.craigslist .sidebar {
-            background: #ffffff;
-            border: none;
-            border-bottom: 1px solid #cccccc;
-        }
-
-        body.craigslist .brand {
-            font-family: Arial, sans-serif;
-            font-size: 1.5rem;
-            color: #800080;
-        }
-
-        body.craigslist .search-input,
-        body.craigslist .btn,
-        body.craigslist .view-toggle {
-            background: #ffffff;
-            border: 1px solid #cccccc;
-            font-family: Arial, sans-serif;
-            color: #000000;
-        }
-
-        body.craigslist .search-input:focus {
-            border-color: #800080;
-            outline: none;
-        }
-
-        body.craigslist .btn {
-            background: #ffffff;
-            color: #0000ff;
-            text-decoration: none;
-        }
-
-        body.craigslist .btn:hover {
-            background: #f0f0f0;
-            text-decoration: underline;
-        }
-
-        body.craigslist .view-toggle-btn {
-            background: #ffffff;
-            color: #0000ff;
-        }
-
-        body.craigslist .view-toggle-btn:hover {
-            background: #f0f0f0;
-        }
-
-        body.craigslist .view-toggle-btn.active {
-            background: #ffffff;
-            color: #0000ff;
-            text-decoration: underline;
-        }
-
-        body.craigslist .location-header,
-        body.craigslist .sun-time-row {
-            border-bottom: 1px solid #cccccc;
-        }
-
-        body.craigslist .sun-time-label,
-        body.craigslist .location-meta,
-        body.craigslist .location-coords {
-            color: #666666;
-        }
-
-        body.craigslist .sun-time-value {
-            color: #0000ff;
-        }
-
-        body.craigslist .sun-time-row.sunrise .sun-time-value {
-            color: #0000ff;
-        }
-
-        body.craigslist .sun-time-row.sunset .sun-time-value {
-            color: #0000ff;
-        }
-
-        body.craigslist .day-length {
-            background: #ffffff;
-            border-top: 1px solid #cccccc;
-        }
-
-        body.craigslist .map-hint {
-            background: #ffffff;
-            border: 1px solid #cccccc;
-            color: #000000;
-        }
-
-        body.craigslist .menu-panel {
-            background: #ffffff;
-            border-left: 1px solid #cccccc;
-        }
-
         /* Responsive */
         @media (max-width: 900px) {
             .layout {
@@ -791,6 +683,29 @@
     </style>
 </head>
 <body class="apple-classic">
+    <!-- Yearly View Modal -->
+    <div id="yearlyModal" class="yearly-modal">
+        <div class="yearly-modal-content">
+            <div class="yearly-modal-header">
+                <h2 class="yearly-modal-title" id="yearlyModalTitle">2025 Sun Times</h2>
+                <button id="yearlyModalClose" class="yearly-modal-close">&times;</button>
+            </div>
+            <div class="yearly-modal-body">
+                <table class="yearly-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Sunrise</th>
+                            <th>Sunset</th>
+                        </tr>
+                    </thead>
+                    <tbody id="yearlyTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <div class="layout">
         <header class="header">
             <h1 class="brand">Dawn & Dusk</h1>
@@ -812,39 +727,29 @@
                     <button class="view-toggle-btn" data-view="2d">2D</button>
                     <button class="view-toggle-btn active" data-view="3d">3D</button>
                 </div>
-                <button id="themeMenuBtn" class="theme-menu-btn" aria-label="Theme menu">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                        <rect x="1" y="3" width="14" height="2"/>
-                        <rect x="1" y="7" width="14" height="2"/>
-                        <rect x="1" y="11" width="14" height="2"/>
-                    </svg>
-                </button>
             </div>
         </header>
-
-        <!-- Theme Menu Drawer -->
-        <div id="themeMenuDrawer" class="theme-menu-drawer">
-            <div class="theme-menu-header">Theme</div>
-            <button class="theme-menu-item" data-theme="default">
-                <span class="theme-menu-radio"></span>
-                Default
-            </button>
-            <button class="theme-menu-item" data-theme="craigslist">
-                <span class="theme-menu-radio"></span>
-                Craigslist
-            </button>
-        </div>
 
         <aside class="sidebar">
             <div id="errorBanner" class="error-banner"></div>
 
             <div class="location-header">
                 <div class="location-name" id="locationName">San Francisco, CA</div>
-                <div class="location-meta" id="dateDisplay"></div>
                 <div class="location-coords" id="coordsDisplay">37.7749° N, 122.4194° W</div>
             </div>
 
             <div class="sun-times">
+                <div class="sun-time-row date-row">
+                    <span class="sun-time-label" id="dateDisplay"></span>
+                    <button id="yearlyViewBtn" class="expand-btn" title="View full year">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                    </button>
+                </div>
                 <div class="sun-time-row sunrise">
                     <span class="sun-time-label">Sunrise</span>
                     <span class="sun-time-value" id="sunrise">--:--</span>
@@ -959,13 +864,11 @@
         let currentLng = -122.4194;
         let currentLocationName = 'San Francisco, CA';
         let currentView = '3d';
-        let currentTheme = 'default';
 
         // ============================================
         // INITIALIZATION
         // ============================================
         document.addEventListener('DOMContentLoaded', () => {
-            loadTheme();
             initGlobe();
             initLeafletMap();
             initEventListeners();
@@ -1068,28 +971,11 @@
                 });
             });
 
-            // Theme menu button
-            document.getElementById('themeMenuBtn').addEventListener('click', (e) => {
-                e.stopPropagation();
-                toggleThemeMenu();
-            });
-
-            // Theme menu items
-            document.querySelectorAll('.theme-menu-item').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const theme = btn.dataset.theme;
-                    setTheme(theme);
-                    closeThemeMenu();
-                });
-            });
-
-            // Close menu when clicking outside
-            document.addEventListener('click', (e) => {
-                const drawer = document.getElementById('themeMenuDrawer');
-                const btn = document.getElementById('themeMenuBtn');
-                if (!drawer.contains(e.target) && !btn.contains(e.target)) {
-                    closeThemeMenu();
-                }
+            // Yearly view button
+            document.getElementById('yearlyViewBtn').addEventListener('click', openYearlyView);
+            document.getElementById('yearlyModalClose').addEventListener('click', closeYearlyView);
+            document.getElementById('yearlyModal').addEventListener('click', (e) => {
+                if (e.target === e.currentTarget) closeYearlyView();
             });
         }
 
@@ -1125,43 +1011,6 @@
                     globe.height(h);
                 }, 100);
             }
-        }
-
-        // ============================================
-        // THEME MENU
-        // ============================================
-        function loadTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'default';
-            setTheme(savedTheme);
-        }
-
-        function setTheme(theme) {
-            currentTheme = theme;
-
-            // Update body data-theme attribute
-            if (theme === 'default') {
-                document.body.removeAttribute('data-theme');
-            } else {
-                document.body.setAttribute('data-theme', theme);
-            }
-
-            // Update active state on theme menu items
-            document.querySelectorAll('.theme-menu-item').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.theme === theme);
-            });
-
-            // Save to localStorage
-            localStorage.setItem('theme', theme);
-        }
-
-        function toggleThemeMenu() {
-            const drawer = document.getElementById('themeMenuDrawer');
-            drawer.classList.toggle('open');
-        }
-
-        function closeThemeMenu() {
-            const drawer = document.getElementById('themeMenuDrawer');
-            drawer.classList.remove('open');
         }
 
         // ============================================
@@ -1214,6 +1063,63 @@
                 },
                 { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 }
             );
+        }
+
+        // ============================================
+        // YEARLY VIEW
+        // ============================================
+        function openYearlyView() {
+            const year = new Date().getFullYear();
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            document.getElementById('yearlyModalTitle').textContent = `${year} Sun Times — ${currentLocationName}`;
+
+            const tbody = document.getElementById('yearlyTableBody');
+            tbody.innerHTML = '';
+
+            // Generate all days of the year
+            const startDate = new Date(year, 0, 1);
+            const endDate = new Date(year, 11, 31);
+
+            for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+                const times = SunCalc.getTimes(d, currentLat, currentLng);
+                const row = document.createElement('tr');
+
+                const checkDate = new Date(d);
+                checkDate.setHours(0, 0, 0, 0);
+                if (checkDate.getTime() === today.getTime()) {
+                    row.classList.add('today');
+                }
+
+                const dateStr = d.toLocaleDateString('en-US', {
+                    weekday: 'short',
+                    month: 'short',
+                    day: 'numeric'
+                });
+
+                row.innerHTML = `
+                    <td>${dateStr}</td>
+                    <td>${formatTime(times.sunrise)}</td>
+                    <td>${formatTime(times.sunset)}</td>
+                `;
+
+                tbody.appendChild(row);
+            }
+
+            document.getElementById('yearlyModal').classList.add('open');
+
+            // Scroll to today
+            setTimeout(() => {
+                const todayRow = tbody.querySelector('.today');
+                if (todayRow) {
+                    todayRow.scrollIntoView({ block: 'center' });
+                }
+            }, 100);
+        }
+
+        function closeYearlyView() {
+            document.getElementById('yearlyModal').classList.remove('open');
         }
 
         // ============================================
