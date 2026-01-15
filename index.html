@@ -3,17 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dawn & Dusk - Sunrise & Sunset Times</title>
+    <title>Dawn & Dusk</title>
 
-    <!-- Inter Font -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-          crossorigin="">
 
     <style>
         * {
@@ -25,24 +20,18 @@
         :root {
             --color-bg: #f5f5f5;
             --color-surface: #ffffff;
-            --color-text: #222222;
+            --color-text: #1a1a1a;
             --color-text-muted: #666666;
-            --color-border: #cccccc;
-            --color-link: #0000ee;
-            --color-sunrise: #e67e00;
-            --color-sunset: #cc4400;
-            --font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
-            --font-serif: Garamond, 'EB Garamond', 'Adobe Garamond Pro', Georgia, 'Times New Roman', serif;
-            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            --max-width: 900px;
-            --spacing-xs: 8px;
-            --spacing-sm: 12px;
-            --spacing-md: 16px;
-            --spacing-lg: 24px;
+            --color-border: #d4d4d4;
+            --color-sunrise: #d97706;
+            --color-sunset: #c2410c;
+            --font-serif: Garamond, 'EB Garamond', Georgia, 'Times New Roman', serif;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
-        html {
-            font-size: 16px;
+        html, body {
+            height: 100%;
+            overflow: hidden;
         }
 
         body {
@@ -50,75 +39,72 @@
             background: var(--color-bg);
             color: var(--color-text);
             line-height: 1.5;
-            min-height: 100vh;
-            min-height: 100dvh;
         }
 
-        /* Layout Container */
-        .container {
-            width: 100%;
-            max-width: var(--max-width);
-            margin: 0 auto;
-            padding: var(--spacing-sm);
+        /* Layout */
+        .layout {
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            grid-template-rows: auto 1fr;
+            height: 100vh;
+            height: 100dvh;
         }
 
         /* Header */
         .header {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
             border-bottom: 1px solid var(--color-border);
-            padding-bottom: var(--spacing-sm);
-            margin-bottom: var(--spacing-md);
+            background: var(--color-surface);
         }
 
-        .header h1 {
+        .brand {
             font-family: var(--font-serif);
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             font-weight: normal;
+            letter-spacing: -0.02em;
         }
 
-        .header h1 span {
+        .brand span {
             color: var(--color-text-muted);
-            font-size: 0.875rem;
+            font-size: 1rem;
+            margin-left: 8px;
         }
 
-        /* Search Section */
-        .search-section {
+        /* Search */
+        .search-group {
             display: flex;
-            flex-direction: column;
-            gap: var(--spacing-xs);
-            margin-bottom: var(--spacing-md);
-        }
-
-        .search-input-wrapper {
-            display: flex;
-            gap: var(--spacing-xs);
+            gap: 8px;
         }
 
         .search-input {
-            flex: 1;
-            padding: var(--spacing-sm);
-            font-size: 1rem;
+            width: 280px;
+            padding: 10px 14px;
+            font-size: 0.9375rem;
+            font-family: var(--font-sans);
             border: 1px solid var(--color-border);
             background: var(--color-surface);
-            font-family: inherit;
-            border-radius: 0;
-            -webkit-appearance: none;
+            outline: none;
         }
 
         .search-input:focus {
-            outline: 2px solid var(--color-text);
-            outline-offset: -2px;
+            border-color: var(--color-text);
         }
 
         .btn {
-            padding: var(--spacing-sm) var(--spacing-md);
+            padding: 10px 16px;
             font-size: 0.875rem;
+            font-family: var(--font-sans);
+            font-weight: 500;
             border: 1px solid var(--color-border);
             background: var(--color-surface);
             cursor: pointer;
-            font-family: inherit;
-            white-space: nowrap;
-            border-radius: 0;
-            -webkit-appearance: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .btn:hover {
@@ -126,278 +112,224 @@
         }
 
         .btn:active {
-            background: var(--color-border);
+            background: #e5e5e5;
         }
 
-        .btn-location {
+        /* Sidebar */
+        .sidebar {
+            border-right: 1px solid var(--color-border);
+            background: var(--color-surface);
+            overflow-y: auto;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        /* Map */
-        .map-container {
-            width: 100%;
-            height: 250px;
-            border: 1px solid var(--color-border);
-            margin-bottom: var(--spacing-md);
-            background: var(--color-surface);
-        }
-
-        #map {
-            width: 100%;
-            height: 100%;
-        }
-
-        /* Location Info */
-        .location-info {
-            border: 1px solid var(--color-border);
-            background: var(--color-surface);
-            margin-bottom: var(--spacing-md);
+            flex-direction: column;
         }
 
         .location-header {
-            padding: var(--spacing-sm) var(--spacing-md);
+            padding: 20px 24px;
             border-bottom: 1px solid var(--color-border);
-            background: var(--color-bg);
         }
 
         .location-name {
             font-family: var(--font-serif);
+            font-size: 1.375rem;
             font-weight: normal;
-            font-size: 1.125rem;
+            margin-bottom: 4px;
         }
 
-        .location-date {
+        .location-meta {
+            font-size: 0.8125rem;
             color: var(--color-text-muted);
-            font-size: 0.875rem;
         }
 
         .location-coords {
-            font-family: var(--font-mono);
             font-size: 0.75rem;
             color: var(--color-text-muted);
-            margin-top: 4px;
+            margin-top: 2px;
+            font-family: var(--font-sans);
+            letter-spacing: 0.01em;
         }
 
-        /* Sun Times Table */
-        .sun-table {
-            width: 100%;
-            border-collapse: collapse;
+        /* Sun Times */
+        .sun-times {
+            flex: 1;
         }
 
-        .sun-table tr {
+        .sun-times-header {
+            padding: 16px 24px 12px;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--color-text-muted);
             border-bottom: 1px solid var(--color-border);
         }
 
-        .sun-table tr:last-child {
+        .sun-time-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 24px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .sun-time-row:last-child {
             border-bottom: none;
         }
 
-        .sun-table td {
-            padding: var(--spacing-sm) var(--spacing-md);
-            font-size: 0.9375rem;
-        }
-
-        .sun-table td:first-child {
+        .sun-time-label {
+            font-size: 0.875rem;
             color: var(--color-text-muted);
-            width: 50%;
         }
 
-        .sun-table td:last-child {
-            font-family: var(--font-mono);
-            text-align: right;
+        .sun-time-value {
+            font-size: 0.9375rem;
+            font-weight: 500;
+            font-variant-numeric: tabular-nums;
         }
 
-        .sun-table .sunrise td:last-child {
+        .sun-time-row.sunrise .sun-time-value {
             color: var(--color-sunrise);
-            font-weight: bold;
         }
 
-        .sun-table .sunset td:last-child {
+        .sun-time-row.sunset .sun-time-value {
             color: var(--color-sunset);
-            font-weight: bold;
         }
 
         /* Day Length */
         .day-length {
-            padding: var(--spacing-sm) var(--spacing-md);
+            padding: 16px 24px;
             border-top: 1px solid var(--color-border);
             background: var(--color-bg);
-            font-size: 0.875rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .day-length-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
             color: var(--color-text-muted);
         }
 
-        /* Footer */
-        .footer {
-            margin-top: var(--spacing-lg);
-            padding-top: var(--spacing-sm);
-            border-top: 1px solid var(--color-border);
+        .day-length-value {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        /* Globe Container */
+        .globe-container {
+            position: relative;
+            background: #0a0a12;
+            overflow: hidden;
+        }
+
+        #globe {
+            width: 100%;
+            height: 100%;
+            cursor: grab;
+        }
+
+        #globe:active {
+            cursor: grabbing;
+        }
+
+        /* Globe Instructions */
+        .globe-hint {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--color-border);
             font-size: 0.75rem;
             color: var(--color-text-muted);
+            pointer-events: none;
         }
 
-        .footer a {
-            color: var(--color-link);
-        }
-
-        /* Loading State */
-        .loading {
-            text-align: center;
-            padding: var(--spacing-lg);
-            color: var(--color-text-muted);
-        }
-
-        /* Error State */
-        .error {
-            padding: var(--spacing-md);
-            background: #fff0f0;
-            border: 1px solid #ffcccc;
-            color: #cc0000;
-            margin-bottom: var(--spacing-md);
+        /* Error */
+        .error-banner {
+            padding: 12px 24px;
+            background: #fef2f2;
+            border-bottom: 1px solid #fecaca;
+            color: #b91c1c;
             font-size: 0.875rem;
-        }
-
-        .error.hidden {
             display: none;
         }
 
-        /* ============================================
-           RESPONSIVE BREAKPOINTS
-           ============================================ */
-
-        /* Tablet Portrait (600px+) */
-        @media (min-width: 600px) {
-            .container {
-                padding: var(--spacing-md);
-            }
-
-            .header h1 {
-                font-size: 1.5rem;
-            }
-
-            .header h1 span {
-                font-size: 1rem;
-            }
-
-            .search-section {
-                flex-direction: row;
-                align-items: stretch;
-            }
-
-            .search-input-wrapper {
-                flex: 1;
-            }
-
-            .map-container {
-                height: 300px;
-            }
-
-            .sun-table td {
-                padding: var(--spacing-md);
-                font-size: 1rem;
-            }
+        .error-banner.visible {
+            display: block;
         }
 
-        /* Tablet Landscape / Small Desktop (900px+) */
-        @media (min-width: 900px) {
-            .container {
-                padding: var(--spacing-lg);
+        /* Responsive */
+        @media (max-width: 900px) {
+            .layout {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr auto;
             }
 
             .header {
-                padding-bottom: var(--spacing-md);
-                margin-bottom: var(--spacing-lg);
+                flex-wrap: wrap;
+                gap: 12px;
             }
 
-            .header h1 {
-                font-size: 1.75rem;
-            }
-
-            .search-section {
-                margin-bottom: var(--spacing-lg);
-            }
-
-            .search-input {
-                padding: var(--spacing-md);
-                font-size: 1.125rem;
-            }
-
-            .btn {
-                padding: var(--spacing-md) var(--spacing-lg);
-                font-size: 1rem;
-            }
-
-            .map-container {
-                height: 350px;
-            }
-
-            .location-header {
-                padding: var(--spacing-md) var(--spacing-lg);
-            }
-
-            .location-name {
-                font-size: 1.125rem;
-            }
-
-            .sun-table td {
-                padding: var(--spacing-md) var(--spacing-lg);
-                font-size: 1.0625rem;
-            }
-        }
-
-        /* Large Desktop (1200px+) */
-        @media (min-width: 1200px) {
-            :root {
-                --max-width: 1000px;
-            }
-
-            .map-container {
-                height: 400px;
-            }
-        }
-
-        /* Handle very small phones */
-        @media (max-width: 359px) {
-            html {
-                font-size: 14px;
-            }
-
-            .btn-location span.btn-text {
+            .brand span {
                 display: none;
             }
-        }
 
-        /* Landscape phone adjustments */
-        @media (max-height: 500px) and (orientation: landscape) {
-            .map-container {
-                height: 200px;
-            }
-        }
-
-        /* Touch device optimizations */
-        @media (hover: none) and (pointer: coarse) {
-            .btn {
-                min-height: 44px;
+            .search-group {
+                width: 100%;
+                order: 3;
             }
 
             .search-input {
-                min-height: 44px;
+                flex: 1;
+                width: auto;
+            }
+
+            .sidebar {
+                order: 3;
+                border-right: none;
+                border-top: 1px solid var(--color-border);
+                max-height: 50vh;
+            }
+
+            .globe-container {
+                order: 2;
+                min-height: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 12px 16px;
+            }
+
+            .brand {
+                font-size: 1.5rem;
+            }
+
+            .location-header,
+            .sun-time-row,
+            .day-length {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .sun-times-header {
+                padding-left: 16px;
+                padding-right: 16px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="layout">
         <header class="header">
-            <h1>Dawn & Dusk <span>- sunrise & sunset times</span></h1>
-        </header>
-
-        <div id="error" class="error hidden"></div>
-
-        <section class="search-section">
-            <div class="search-input-wrapper">
+            <h1 class="brand">Dawn & Dusk <span>— sunrise & sunset times</span></h1>
+            <div class="search-group">
                 <input
                     type="text"
                     id="search"
@@ -406,76 +338,75 @@
                     autocomplete="off"
                 >
                 <button id="searchBtn" class="btn">Search</button>
+                <button id="locationBtn" class="btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M12 2v4m0 12v4m10-10h-4M6 12H2"/>
+                    </svg>
+                    <span>My Location</span>
+                </button>
             </div>
-            <button id="locationBtn" class="btn btn-location">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="3"/>
-                    <path d="M12 2v4m0 12v4m10-10h-4M6 12H2"/>
-                </svg>
-                <span class="btn-text">Use My Location</span>
-            </button>
-        </section>
+        </header>
 
-        <div class="map-container">
-            <div id="map"></div>
-        </div>
+        <aside class="sidebar">
+            <div id="errorBanner" class="error-banner"></div>
 
-        <section class="location-info" id="locationInfo">
             <div class="location-header">
-                <div class="location-name" id="locationName">Loading...</div>
-                <div class="location-date" id="locationDate"></div>
-                <div class="location-coords" id="locationCoords"></div>
+                <div class="location-name" id="locationName">San Francisco, CA</div>
+                <div class="location-meta" id="dateDisplay"></div>
+                <div class="location-coords" id="coordsDisplay">37.7749° N, 122.4194° W</div>
             </div>
-            <table class="sun-table">
-                <tbody>
-                    <tr>
-                        <td>First Light</td>
-                        <td id="astroStart">--:--</td>
-                    </tr>
-                    <tr>
-                        <td>Dawn</td>
-                        <td id="nauticalStart">--:--</td>
-                    </tr>
-                    <tr>
-                        <td>Golden Hour</td>
-                        <td id="goldenStart">--:--</td>
-                    </tr>
-                    <tr class="sunrise">
-                        <td>Sunrise</td>
-                        <td id="sunrise">--:--</td>
-                    </tr>
-                    <tr class="sunset">
-                        <td>Sunset</td>
-                        <td id="sunset">--:--</td>
-                    </tr>
-                    <tr>
-                        <td>Golden Hour</td>
-                        <td id="goldenEnd">--:--</td>
-                    </tr>
-                    <tr>
-                        <td>Dusk</td>
-                        <td id="nauticalEnd">--:--</td>
-                    </tr>
-                    <tr>
-                        <td>Last Light</td>
-                        <td id="astroEnd">--:--</td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="day-length" id="dayLength">
-                Day length: --h --m
-            </div>
-        </section>
 
-        <footer class="footer">
-            <p>Click anywhere on the map to see sun times for that location.</p>
-        </footer>
+            <div class="sun-times">
+                <div class="sun-times-header">Sun Times</div>
+                <div class="sun-time-row">
+                    <span class="sun-time-label">First Light</span>
+                    <span class="sun-time-value" id="firstLight">--:--</span>
+                </div>
+                <div class="sun-time-row">
+                    <span class="sun-time-label">Dawn</span>
+                    <span class="sun-time-value" id="dawn">--:--</span>
+                </div>
+                <div class="sun-time-row">
+                    <span class="sun-time-label">Golden Hour</span>
+                    <span class="sun-time-value" id="goldenAM">--:--</span>
+                </div>
+                <div class="sun-time-row sunrise">
+                    <span class="sun-time-label">Sunrise</span>
+                    <span class="sun-time-value" id="sunrise">--:--</span>
+                </div>
+                <div class="sun-time-row sunset">
+                    <span class="sun-time-label">Sunset</span>
+                    <span class="sun-time-value" id="sunset">--:--</span>
+                </div>
+                <div class="sun-time-row">
+                    <span class="sun-time-label">Golden Hour</span>
+                    <span class="sun-time-value" id="goldenPM">--:--</span>
+                </div>
+                <div class="sun-time-row">
+                    <span class="sun-time-label">Dusk</span>
+                    <span class="sun-time-value" id="dusk">--:--</span>
+                </div>
+                <div class="sun-time-row">
+                    <span class="sun-time-label">Last Light</span>
+                    <span class="sun-time-value" id="lastLight">--:--</span>
+                </div>
+            </div>
+
+            <div class="day-length">
+                <span class="day-length-label">Day Length</span>
+                <span class="day-length-value" id="dayLength">--h --m</span>
+            </div>
+        </aside>
+
+        <div class="globe-container">
+            <div id="globe"></div>
+            <div class="globe-hint">Click to select location · Scroll to zoom · Drag to rotate</div>
+        </div>
     </div>
 
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-            crossorigin=""></script>
+    <!-- Globe.gl -->
+    <script src="https://unpkg.com/globe.gl"></script>
 
     <!-- SunCalc -->
     <script src="https://unpkg.com/suncalc@1.9.0/suncalc.js"></script>
@@ -484,50 +415,69 @@
         // ============================================
         // STATE
         // ============================================
-        let map;
-        let marker;
+        let globe;
         let currentLat = 37.7749;
         let currentLng = -122.4194;
         let currentLocationName = 'San Francisco, CA';
+        let marker = null;
 
         // ============================================
         // INITIALIZATION
         // ============================================
-        document.addEventListener('DOMContentLoaded', function() {
-            initMap();
+        document.addEventListener('DOMContentLoaded', () => {
+            initGlobe();
             initEventListeners();
-            updateSunTimes(currentLat, currentLng, currentLocationName);
+            updateDisplay(currentLat, currentLng, currentLocationName);
+            updateDateDisplay();
         });
 
-        function initMap() {
-            map = L.map('map').setView([currentLat, currentLng], 10);
+        function initGlobe() {
+            const container = document.getElementById('globe');
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-                maxZoom: 19
-            }).addTo(map);
+            // High-res Earth texture (8K - 8192x4096)
+            const EARTH_TEXTURE = './earth-hd.jpg';
+            const BUMP_MAP = 'https://unpkg.com/three-globe@2.31.1/example/img/earth-topology.png';
 
-            // Add initial marker
-            marker = L.marker([currentLat, currentLng]).addTo(map);
+            globe = Globe()
+                .globeImageUrl(EARTH_TEXTURE)
+                .bumpImageUrl(BUMP_MAP)
+                .backgroundImageUrl('https://unpkg.com/three-globe/example/img/night-sky.png')
+                .showAtmosphere(true)
+                .atmosphereColor('#4a90d9')
+                .atmosphereAltitude(0.15)
+                .pointsData([{ lat: currentLat, lng: currentLng }])
+                .pointColor(() => '#f59e0b')
+                .pointAltitude(0.01)
+                .pointRadius(0.5)
+                .onGlobeClick(({ lat, lng }) => {
+                    setLocation(lat, lng);
+                    reverseGeocode(lat, lng);
+                })
+                (container);
 
-            // Click on map to select location
-            map.on('click', function(e) {
-                const lat = e.latlng.lat;
-                const lng = e.latlng.lng;
-                setLocation(lat, lng);
-                reverseGeocode(lat, lng);
+            // Set initial view
+            globe.pointOfView({ lat: currentLat, lng: currentLng, altitude: 2.5 });
+
+            // Configure zoom limits via three.js controls
+            const controls = globe.controls();
+            controls.minDistance = 101;  // Closest zoom (globe radius is 100)
+            controls.maxDistance = 500;  // Farthest zoom
+            controls.zoomSpeed = 0.8;
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.1;
+
+            // Handle resize
+            window.addEventListener('resize', () => {
+                globe.width(container.clientWidth);
+                globe.height(container.clientHeight);
             });
         }
 
         function initEventListeners() {
             document.getElementById('searchBtn').addEventListener('click', performSearch);
-
-            document.getElementById('search').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    performSearch();
-                }
+            document.getElementById('search').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') performSearch();
             });
-
             document.getElementById('locationBtn').addEventListener('click', getUserLocation);
         }
 
@@ -538,14 +488,13 @@
             currentLat = lat;
             currentLng = lng;
 
-            if (marker) {
-                marker.setLatLng([lat, lng]);
-            } else {
-                marker = L.marker([lat, lng]).addTo(map);
-            }
+            // Update marker
+            globe.pointsData([{ lat, lng }]);
 
-            map.setView([lat, lng], map.getZoom());
-            updateSunTimes(lat, lng, name || currentLocationName);
+            // Animate to location
+            globe.pointOfView({ lat, lng, altitude: 2.5 }, 1000);
+
+            updateDisplay(lat, lng, name || currentLocationName);
         }
 
         function getUserLocation() {
@@ -558,45 +507,32 @@
 
             const btn = document.getElementById('locationBtn');
             btn.disabled = true;
-            btn.innerHTML = '<span>Locating...</span>';
+            const originalText = btn.querySelector('span').textContent;
+            btn.querySelector('span').textContent = 'Locating...';
 
             navigator.geolocation.getCurrentPosition(
-                function(position) {
-                    const lat = position.coords.latitude;
-                    const lng = position.coords.longitude;
+                (position) => {
+                    const { latitude: lat, longitude: lng } = position.coords;
                     setLocation(lat, lng);
                     reverseGeocode(lat, lng);
-                    map.setZoom(12);
-                    resetLocationButton();
+                    resetLocationButton(btn, originalText);
                 },
-                function(error) {
-                    let message = 'Unable to get your location. ';
-                    switch(error.code) {
-                        case error.PERMISSION_DENIED:
-                            message += 'Permission denied.';
-                            break;
-                        case error.POSITION_UNAVAILABLE:
-                            message += 'Position unavailable.';
-                            break;
-                        case error.TIMEOUT:
-                            message += 'Request timed out.';
-                            break;
-                    }
-                    showError(message);
-                    resetLocationButton();
+                (error) => {
+                    const messages = {
+                        1: 'Location permission denied',
+                        2: 'Position unavailable',
+                        3: 'Request timed out'
+                    };
+                    showError(messages[error.code] || 'Unable to get location');
+                    resetLocationButton(btn, originalText);
                 },
-                {
-                    enableHighAccuracy: true,
-                    timeout: 10000,
-                    maximumAge: 300000
-                }
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 }
             );
         }
 
-        function resetLocationButton() {
-            const btn = document.getElementById('locationBtn');
+        function resetLocationButton(btn, text) {
             btn.disabled = false;
-            btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m10-10h-4M6 12H2"/></svg><span class="btn-text">Use My Location</span>';
+            btn.querySelector('span').textContent = text;
         }
 
         // ============================================
@@ -605,7 +541,6 @@
         function performSearch() {
             const query = document.getElementById('search').value.trim();
             if (!query) return;
-
             hideError();
             geocode(query);
         }
@@ -613,100 +548,71 @@
         function geocode(query) {
             const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`;
 
-            fetch(url, {
-                headers: {
-                    'Accept': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data && data.length > 0) {
-                    const result = data[0];
-                    const lat = parseFloat(result.lat);
-                    const lng = parseFloat(result.lon);
-                    const name = result.display_name.split(',').slice(0, 2).join(',');
-
-                    setLocation(lat, lng, name);
-                    currentLocationName = name;
-                    map.setZoom(12);
-                } else {
-                    showError('Location not found. Try a different search term.');
-                }
-            })
-            .catch(error => {
-                showError('Search failed. Please try again.');
-                console.error('Geocoding error:', error);
-            });
+            fetch(url, { headers: { 'Accept': 'application/json' } })
+                .then(res => res.json())
+                .then(data => {
+                    if (data?.length > 0) {
+                        const { lat, lon, display_name } = data[0];
+                        const name = display_name.split(',').slice(0, 2).join(',').trim();
+                        currentLocationName = name;
+                        setLocation(parseFloat(lat), parseFloat(lon), name);
+                    } else {
+                        showError('Location not found. Try a different search term.');
+                    }
+                })
+                .catch(() => showError('Search failed. Please try again.'));
         }
 
         function reverseGeocode(lat, lng) {
             const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`;
 
-            fetch(url, {
-                headers: {
-                    'Accept': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data && data.display_name) {
-                    const name = data.display_name.split(',').slice(0, 2).join(',');
-                    currentLocationName = name;
-                    updateSunTimes(lat, lng, name);
-                }
-            })
-            .catch(error => {
-                console.error('Reverse geocoding error:', error);
-                currentLocationName = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
-                updateSunTimes(lat, lng, currentLocationName);
-            });
+            fetch(url, { headers: { 'Accept': 'application/json' } })
+                .then(res => res.json())
+                .then(data => {
+                    if (data?.display_name) {
+                        const name = data.display_name.split(',').slice(0, 2).join(',').trim();
+                        currentLocationName = name;
+                        updateDisplay(lat, lng, name);
+                    }
+                })
+                .catch(() => {
+                    currentLocationName = formatCoords(lat, lng);
+                    updateDisplay(lat, lng, currentLocationName);
+                });
         }
 
         // ============================================
-        // SUN CALCULATIONS
+        // DISPLAY UPDATES
         // ============================================
-        function updateSunTimes(lat, lng, locationName) {
+        function updateDisplay(lat, lng, locationName) {
             const now = new Date();
             const times = SunCalc.getTimes(now, lat, lng);
 
             document.getElementById('locationName').textContent = locationName;
-            document.getElementById('locationDate').textContent = formatDate(now);
-            document.getElementById('locationCoords').textContent = `${lat.toFixed(4)}°, ${lng.toFixed(4)}°`;
+            document.getElementById('coordsDisplay').textContent = formatCoords(lat, lng);
 
-            document.getElementById('astroStart').textContent = formatTime(times.nightEnd);
-            document.getElementById('nauticalStart').textContent = formatTime(times.nauticalDawn);
-            document.getElementById('goldenStart').textContent = formatTime(times.goldenHourEnd);
+            document.getElementById('firstLight').textContent = formatTime(times.nightEnd);
+            document.getElementById('dawn').textContent = formatTime(times.nauticalDawn);
+            document.getElementById('goldenAM').textContent = formatTime(times.goldenHourEnd);
             document.getElementById('sunrise').textContent = formatTime(times.sunrise);
             document.getElementById('sunset').textContent = formatTime(times.sunset);
-            document.getElementById('goldenEnd').textContent = formatTime(times.goldenHour);
-            document.getElementById('nauticalEnd').textContent = formatTime(times.nauticalDusk);
-            document.getElementById('astroEnd').textContent = formatTime(times.night);
+            document.getElementById('goldenPM').textContent = formatTime(times.goldenHour);
+            document.getElementById('dusk').textContent = formatTime(times.nauticalDusk);
+            document.getElementById('lastLight').textContent = formatTime(times.night);
 
             if (times.sunrise && times.sunset && !isNaN(times.sunrise) && !isNaN(times.sunset)) {
-                const dayLengthMs = times.sunset - times.sunrise;
-                const hours = Math.floor(dayLengthMs / (1000 * 60 * 60));
-                const minutes = Math.floor((dayLengthMs % (1000 * 60 * 60)) / (1000 * 60));
-                document.getElementById('dayLength').textContent = `Day length: ${hours}h ${minutes}m`;
+                const ms = times.sunset - times.sunrise;
+                const hours = Math.floor(ms / 3600000);
+                const minutes = Math.floor((ms % 3600000) / 60000);
+                document.getElementById('dayLength').textContent = `${hours}h ${minutes}m`;
             } else {
-                document.getElementById('dayLength').textContent = 'Day length: --';
+                document.getElementById('dayLength').textContent = '--';
             }
         }
 
-        // ============================================
-        // FORMATTING HELPERS
-        // ============================================
-        function formatTime(date) {
-            if (!date || isNaN(date)) return '--:--';
-
-            return date.toLocaleTimeString([], {
-                hour: 'numeric',
-                minute: '2-digit',
-                hour12: true
-            });
-        }
-
-        function formatDate(date) {
-            return date.toLocaleDateString([], {
+        function updateDateDisplay() {
+            const now = new Date();
+            document.getElementById('dateDisplay').textContent = now.toLocaleDateString('en-US', {
                 weekday: 'long',
                 year: 'numeric',
                 month: 'long',
@@ -715,16 +621,34 @@
         }
 
         // ============================================
+        // FORMATTING
+        // ============================================
+        function formatTime(date) {
+            if (!date || isNaN(date)) return '--:--';
+            return date.toLocaleTimeString('en-US', {
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
+        }
+
+        function formatCoords(lat, lng) {
+            const latDir = lat >= 0 ? 'N' : 'S';
+            const lngDir = lng >= 0 ? 'E' : 'W';
+            return `${Math.abs(lat).toFixed(4)}° ${latDir}, ${Math.abs(lng).toFixed(4)}° ${lngDir}`;
+        }
+
+        // ============================================
         // ERROR HANDLING
         // ============================================
         function showError(message) {
-            const errorEl = document.getElementById('error');
-            errorEl.textContent = message;
-            errorEl.classList.remove('hidden');
+            const banner = document.getElementById('errorBanner');
+            banner.textContent = message;
+            banner.classList.add('visible');
         }
 
         function hideError() {
-            document.getElementById('error').classList.add('hidden');
+            document.getElementById('errorBanner').classList.remove('visible');
         }
     </script>
 </body>
