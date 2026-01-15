@@ -24,15 +24,63 @@
         }
 
         :root {
-            --color-bg: #f5f5f5;
-            --color-surface: #ffffff;
-            --color-text: #1a1a1a;
-            --color-text-muted: #666666;
-            --color-border: #d4d4d4;
+            --color-bg: #dddddd;
+            --color-surface: #eeeeee;
+            --color-text: #000000;
+            --color-text-muted: #555555;
+            --color-border: #999999;
             --color-sunrise: #d97706;
             --color-sunset: #c2410c;
-            --font-serif: Garamond, 'EB Garamond', Georgia, 'Times New Roman', serif;
-            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-serif: 'Times New Roman', Times, Georgia, serif;
+            --font-sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        /* Craigslist Theme - Minimal and functional */
+        body[data-theme="craigslist"] {
+            --color-bg: #ffffff;
+            --color-surface: #ffffff;
+            --color-text: #000000;
+            --color-text-muted: #555555;
+            --color-border: #dddddd;
+            --color-sunrise: #0000ff;
+            --color-sunset: #800080;
+            --font-serif: serif;
+            --font-sans: sans-serif;
+        }
+
+        body[data-theme="craigslist"] .brand {
+            color: #800080;
+        }
+
+        body[data-theme="craigslist"] .location-name {
+            color: #800080;
+        }
+
+        body[data-theme="craigslist"] .sun-time-value {
+            color: #0000ff;
+        }
+
+        body[data-theme="craigslist"] .sun-time-row.sunrise .sun-time-value,
+        body[data-theme="craigslist"] .sun-time-row.sunset .sun-time-value {
+            color: #0000ff;
+        }
+
+        body[data-theme="craigslist"] .btn,
+        body[data-theme="craigslist"] .view-toggle-btn,
+        body[data-theme="craigslist"] .theme-toggle-btn {
+            color: #0000ff;
+        }
+
+        body[data-theme="craigslist"] .btn:hover,
+        body[data-theme="craigslist"] .view-toggle-btn:hover,
+        body[data-theme="craigslist"] .theme-toggle-btn:hover {
+            text-decoration: underline;
+        }
+
+        body[data-theme="craigslist"] .view-toggle-btn.active,
+        body[data-theme="craigslist"] .theme-toggle-btn.active {
+            color: #000000;
+            text-decoration: none;
         }
 
         html, body {
@@ -63,28 +111,24 @@
             align-items: center;
             justify-content: space-between;
             padding: 16px 24px;
-            border-bottom: 1px solid var(--color-border);
+            border-bottom: 2px solid var(--color-border);
             background: var(--color-surface);
-            gap: 16px;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 16px;
+            box-shadow: inset 0 -1px 0 rgba(255,255,255,0.5);
         }
 
         .brand {
             font-family: var(--font-serif);
             font-size: 1.75rem;
-            font-weight: normal;
+            font-weight: bold;
             letter-spacing: -0.02em;
+            color: var(--color-text);
         }
 
         .brand span {
             color: var(--color-text-muted);
             font-size: 1rem;
             margin-left: 8px;
+            font-weight: normal;
         }
 
         /* Controls Group */
@@ -99,13 +143,14 @@
             padding: 10px 14px;
             font-size: 0.9375rem;
             font-family: var(--font-sans);
-            border: 1px solid var(--color-border);
-            background: var(--color-surface);
+            border: 2px inset var(--color-border);
+            background: white;
             outline: none;
+            border-radius: 0;
         }
 
         .search-input:focus {
-            border-color: var(--color-text);
+            border-color: #666666;
         }
 
         .btn {
@@ -113,28 +158,28 @@
             font-size: 0.875rem;
             font-family: var(--font-sans);
             font-weight: 500;
-            border: 1px solid var(--color-border);
+            border: 2px outset var(--color-border);
             background: var(--color-surface);
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 6px;
+            border-radius: 0;
         }
 
         .btn:hover {
-            background: var(--color-bg);
+            background: #cccccc;
         }
 
         .btn:active {
-            background: #e5e5e5;
+            border-style: inset;
+            background: #bbbbbb;
         }
 
         /* View Toggle */
         .view-toggle {
             display: flex;
-            border: 1px solid var(--color-border);
-            background: var(--color-surface);
-            overflow: hidden;
+            border-radius: 0;
         }
 
         .view-toggle-btn {
@@ -142,44 +187,160 @@
             font-size: 0.8125rem;
             font-family: var(--font-sans);
             font-weight: 500;
-            border: none;
-            background: transparent;
+            border: 2px outset var(--color-border);
+            background: var(--color-surface);
             cursor: pointer;
-            color: var(--color-text-muted);
-            transition: all 0.15s ease;
+            color: var(--color-text);
+            border-radius: 0;
         }
 
         .view-toggle-btn:hover {
-            background: var(--color-bg);
+            background: #cccccc;
         }
 
         .view-toggle-btn.active {
-            background: var(--color-text);
-            color: white;
+            border-style: inset;
+            background: #bbbbbb;
         }
 
         .view-toggle-btn + .view-toggle-btn {
-            border-left: 1px solid var(--color-border);
+            border-left: 2px outset var(--color-border);
+        }
+
+        .view-toggle-btn.active + .view-toggle-btn {
+            border-left: 2px outset var(--color-border);
+        }
+
+        /* Theme Menu Button */
+        .theme-menu-btn {
+            padding: 10px;
+            width: 38px;
+            height: 38px;
+            font-size: 0.8125rem;
+            font-family: var(--font-sans);
+            font-weight: 500;
+            border: 2px outset var(--color-border);
+            background: var(--color-surface);
+            cursor: pointer;
+            color: var(--color-text);
+            border-radius: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-menu-btn:hover {
+            background: #cccccc;
+        }
+
+        .theme-menu-btn:active {
+            border-style: inset;
+            background: #bbbbbb;
+        }
+
+        /* Theme Menu Drawer */
+        .theme-menu-drawer {
+            position: absolute;
+            top: 68px;
+            right: 24px;
+            width: 180px;
+            background: var(--color-surface);
+            border: 2px outset var(--color-border);
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        .theme-menu-drawer.open {
+            display: flex;
+        }
+
+        .theme-menu-header {
+            padding: 8px 12px;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--color-text);
+            border-bottom: 2px groove var(--color-border);
+            background: var(--color-bg);
+        }
+
+        .theme-menu-item {
+            padding: 10px 12px;
+            font-size: 0.875rem;
+            font-family: var(--font-sans);
+            text-align: left;
+            border: none;
+            background: var(--color-surface);
+            cursor: pointer;
+            color: var(--color-text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .theme-menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .theme-menu-item:hover {
+            background: var(--color-bg);
+        }
+
+        .theme-menu-item:active {
+            background: #bbbbbb;
+        }
+
+        .theme-menu-radio {
+            width: 12px;
+            height: 12px;
+            border: 2px inset var(--color-border);
+            border-radius: 50%;
+            background: white;
+            display: inline-block;
+        }
+
+        .theme-menu-item.active .theme-menu-radio {
+            background: var(--color-text);
+            border-style: outset;
         }
 
         /* Sidebar */
         .sidebar {
-            border-right: 1px solid var(--color-border);
+            border-right: 2px solid var(--color-border);
             background: var(--color-surface);
             overflow-y: auto;
             display: flex;
             flex-direction: column;
         }
 
+        .sidebar::-webkit-scrollbar {
+            width: 16px;
+            background: var(--color-bg);
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #aaaaaa;
+            border: 2px outset #999999;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:active {
+            border-style: inset;
+        }
+
         .location-header {
             padding: 20px 24px;
-            border-bottom: 1px solid var(--color-border);
+            border-bottom: 2px groove var(--color-border);
+            background: var(--color-surface);
         }
 
         .location-name {
             font-family: var(--font-serif);
             font-size: 1.375rem;
-            font-weight: normal;
+            font-weight: bold;
             margin-bottom: 4px;
         }
 
@@ -207,8 +368,9 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.08em;
-            color: var(--color-text-muted);
-            border-bottom: 1px solid var(--color-border);
+            color: var(--color-text);
+            border-bottom: 2px groove var(--color-border);
+            background: var(--color-bg);
         }
 
         .sun-time-row {
@@ -217,6 +379,7 @@
             align-items: center;
             padding: 12px 24px;
             border-bottom: 1px solid var(--color-border);
+            background: var(--color-surface);
         }
 
         .sun-time-row:last-child {
@@ -245,7 +408,7 @@
         /* Day Length */
         .day-length {
             padding: 16px 24px;
-            border-top: 1px solid var(--color-border);
+            border-top: 2px groove var(--color-border);
             background: var(--color-bg);
             display: flex;
             justify-content: space-between;
@@ -257,12 +420,13 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.08em;
-            color: var(--color-text-muted);
+            color: var(--color-text);
         }
 
         .day-length-value {
             font-size: 1rem;
             font-weight: 600;
+            color: var(--color-text);
         }
 
         /* Map Container */
@@ -774,8 +938,28 @@
                     <button class="view-toggle-btn" data-view="2d">2D</button>
                     <button class="view-toggle-btn active" data-view="3d">3D</button>
                 </div>
+                <button id="themeMenuBtn" class="theme-menu-btn" aria-label="Theme menu">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                        <rect x="1" y="3" width="14" height="2"/>
+                        <rect x="1" y="7" width="14" height="2"/>
+                        <rect x="1" y="11" width="14" height="2"/>
+                    </svg>
+                </button>
             </div>
         </header>
+
+        <!-- Theme Menu Drawer -->
+        <div id="themeMenuDrawer" class="theme-menu-drawer">
+            <div class="theme-menu-header">Theme</div>
+            <button class="theme-menu-item" data-theme="default">
+                <span class="theme-menu-radio"></span>
+                Default
+            </button>
+            <button class="theme-menu-item" data-theme="craigslist">
+                <span class="theme-menu-radio"></span>
+                Craigslist
+            </button>
+        </div>
 
         <aside class="sidebar">
             <div id="errorBanner" class="error-banner"></div>
@@ -922,11 +1106,13 @@
         let currentLng = -122.4194;
         let currentLocationName = 'San Francisco, CA';
         let currentView = '3d';
+        let currentTheme = 'default';
 
         // ============================================
         // INITIALIZATION
         // ============================================
         document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
             initGlobe();
             initLeafletMap();
             initEventListeners();
@@ -1029,55 +1215,28 @@
                 });
             });
 
-            // Hamburger menu
-            const hamburgerBtn = document.getElementById('hamburgerBtn');
-            const menuPanel = document.getElementById('menuPanel');
-            const menuOverlay = document.getElementById('menuOverlay');
-            const menuClose = document.getElementById('menuClose');
+            // Theme menu button
+            document.getElementById('themeMenuBtn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleThemeMenu();
+            });
 
-            function openMenu() {
-                menuPanel.classList.add('open');
-                menuOverlay.classList.add('visible');
-                hamburgerBtn.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            }
-
-            function closeMenu() {
-                menuPanel.classList.remove('open');
-                menuOverlay.classList.remove('visible');
-                hamburgerBtn.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-
-            hamburgerBtn.addEventListener('click', openMenu);
-            menuClose.addEventListener('click', closeMenu);
-            menuOverlay.addEventListener('click', closeMenu);
-
-            // Theme switcher
-            const themeOptions = document.querySelectorAll('.theme-option');
-            themeOptions.forEach(option => {
-                option.addEventListener('click', () => {
-                    const theme = option.dataset.theme;
-                    // Remove all theme classes
-                    document.body.classList.remove('apple-classic', 'craigslist');
-                    // Add selected theme
-                    document.body.classList.add(theme);
-                    // Update active state
-                    themeOptions.forEach(opt => opt.classList.remove('active'));
-                    option.classList.add('active');
-                    // Save to localStorage
-                    localStorage.setItem('theme', theme);
-                    // Close menu
-                    closeMenu();
+            // Theme menu items
+            document.querySelectorAll('.theme-menu-item').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const theme = btn.dataset.theme;
+                    setTheme(theme);
+                    closeThemeMenu();
                 });
             });
 
-            // Load saved theme
-            const savedTheme = localStorage.getItem('theme') || 'apple-classic';
-            document.body.classList.remove('apple-classic', 'craigslist');
-            document.body.classList.add(savedTheme);
-            themeOptions.forEach(opt => {
-                opt.classList.toggle('active', opt.dataset.theme === savedTheme);
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                const drawer = document.getElementById('themeMenuDrawer');
+                const btn = document.getElementById('themeMenuBtn');
+                if (!drawer.contains(e.target) && !btn.contains(e.target)) {
+                    closeThemeMenu();
+                }
             });
         }
 
@@ -1113,6 +1272,43 @@
                     globe.height(h);
                 }, 100);
             }
+        }
+
+        // ============================================
+        // THEME MENU
+        // ============================================
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'default';
+            setTheme(savedTheme);
+        }
+
+        function setTheme(theme) {
+            currentTheme = theme;
+
+            // Update body data-theme attribute
+            if (theme === 'default') {
+                document.body.removeAttribute('data-theme');
+            } else {
+                document.body.setAttribute('data-theme', theme);
+            }
+
+            // Update active state on theme menu items
+            document.querySelectorAll('.theme-menu-item').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.theme === theme);
+            });
+
+            // Save to localStorage
+            localStorage.setItem('theme', theme);
+        }
+
+        function toggleThemeMenu() {
+            const drawer = document.getElementById('themeMenuDrawer');
+            drawer.classList.toggle('open');
+        }
+
+        function closeThemeMenu() {
+            const drawer = document.getElementById('themeMenuDrawer');
+            drawer.classList.remove('open');
         }
 
         // ============================================
