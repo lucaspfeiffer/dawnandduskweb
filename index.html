@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
 
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -64,6 +65,13 @@
             padding: 16px 24px;
             border-bottom: 1px solid var(--color-border);
             background: var(--color-surface);
+            gap: 16px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
         }
 
         .brand {
@@ -345,6 +353,314 @@
             display: block;
         }
 
+        /* ============================================
+           HAMBURGER MENU
+           ============================================ */
+        .hamburger-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+        }
+
+        .hamburger-btn span {
+            display: block;
+            width: 20px;
+            height: 2px;
+            background: var(--color-text);
+            transition: all 0.3s ease;
+        }
+
+        .hamburger-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9998;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .menu-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .menu-panel {
+            position: fixed;
+            top: 0;
+            right: -320px;
+            width: 320px;
+            height: 100%;
+            background: var(--color-surface);
+            box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .menu-panel.open {
+            right: 0;
+        }
+
+        .menu-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .menu-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .menu-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--color-text-muted);
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-content {
+            padding: 24px;
+        }
+
+        .menu-section {
+            margin-bottom: 24px;
+        }
+
+        .menu-section-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--color-text-muted);
+            margin-bottom: 12px;
+        }
+
+        .theme-option {
+            display: block;
+            width: 100%;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            background: var(--color-bg);
+            border: 1px solid var(--color-border);
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 0.9375rem;
+            transition: all 0.2s ease;
+        }
+
+        .theme-option:hover {
+            background: #e5e5e5;
+        }
+
+        .theme-option.active {
+            background: var(--color-text);
+            color: white;
+            border-color: var(--color-text);
+        }
+
+        /* ============================================
+           THEME STYLES
+           ============================================ */
+
+        /* APPLE CLASSIC THEME (Default) */
+        body.apple-classic {
+            background: #c0c0c0;
+        }
+
+        body.apple-classic .header,
+        body.apple-classic .sidebar {
+            background: #ffffff;
+            border: 2px outset #c0c0c0;
+        }
+
+        body.apple-classic .search-input,
+        body.apple-classic .btn,
+        body.apple-classic .view-toggle {
+            background: #f0f0f0;
+            border: 2px outset #c0c0c0;
+            font-family: 'Courier New', 'Monaco', monospace;
+        }
+
+        body.apple-classic .search-input:focus {
+            border: 2px inset #808080;
+        }
+
+        body.apple-classic .btn {
+            border: 2px outset #c0c0c0;
+        }
+
+        body.apple-classic .btn:active {
+            border: 2px inset #808080;
+            background: #e0e0e0;
+        }
+
+        body.apple-classic .view-toggle {
+            border: 2px outset #c0c0c0;
+        }
+
+        body.apple-classic .view-toggle-btn.active {
+            background: #000080;
+            color: #ffffff;
+            border: 2px inset #808080;
+        }
+
+        body.apple-classic .location-header,
+        body.apple-classic .sun-time-row {
+            border-bottom: 1px solid #c0c0c0;
+        }
+
+        body.apple-classic .day-length {
+            background: #e0e0e0;
+            border-top: 2px outset #c0c0c0;
+        }
+
+        body.apple-classic .map-hint {
+            background: #ffffcc;
+            border: 2px outset #c0c0c0;
+            color: #000000;
+        }
+
+        body.apple-classic .menu-panel {
+            background: #ffffff;
+            border-left: 2px outset #c0c0c0;
+        }
+
+        body.apple-classic .menu-overlay {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        /* CRAIGSLIST THEME */
+        body.craigslist {
+            background: #ffffff;
+        }
+
+        body.craigslist .header,
+        body.craigslist .sidebar {
+            background: #ffffff;
+            border: none;
+            border-bottom: 1px solid #cccccc;
+        }
+
+        body.craigslist .brand {
+            font-family: Arial, sans-serif;
+            font-size: 1.5rem;
+            color: #800080;
+        }
+
+        body.craigslist .search-input,
+        body.craigslist .btn,
+        body.craigslist .view-toggle {
+            background: #ffffff;
+            border: 1px solid #cccccc;
+            font-family: Arial, sans-serif;
+            color: #000000;
+        }
+
+        body.craigslist .search-input:focus {
+            border-color: #800080;
+            outline: none;
+        }
+
+        body.craigslist .btn {
+            background: #ffffff;
+            color: #0000ff;
+            text-decoration: none;
+        }
+
+        body.craigslist .btn:hover {
+            background: #f0f0f0;
+            text-decoration: underline;
+        }
+
+        body.craigslist .view-toggle-btn {
+            background: #ffffff;
+            color: #0000ff;
+        }
+
+        body.craigslist .view-toggle-btn:hover {
+            background: #f0f0f0;
+        }
+
+        body.craigslist .view-toggle-btn.active {
+            background: #ffffff;
+            color: #0000ff;
+            text-decoration: underline;
+        }
+
+        body.craigslist .location-header,
+        body.craigslist .sun-time-row {
+            border-bottom: 1px solid #cccccc;
+        }
+
+        body.craigslist .sun-time-label,
+        body.craigslist .location-meta,
+        body.craigslist .location-coords {
+            color: #666666;
+        }
+
+        body.craigslist .sun-time-value {
+            color: #0000ff;
+        }
+
+        body.craigslist .sun-time-row.sunrise .sun-time-value {
+            color: #0000ff;
+        }
+
+        body.craigslist .sun-time-row.sunset .sun-time-value {
+            color: #0000ff;
+        }
+
+        body.craigslist .day-length {
+            background: #ffffff;
+            border-top: 1px solid #cccccc;
+        }
+
+        body.craigslist .map-hint {
+            background: #ffffff;
+            border: 1px solid #cccccc;
+            color: #000000;
+        }
+
+        body.craigslist .menu-panel {
+            background: #ffffff;
+            border-left: 1px solid #cccccc;
+        }
+
         /* Responsive */
         @media (max-width: 900px) {
             .layout {
@@ -413,10 +729,31 @@
         }
     </style>
 </head>
-<body>
+<body class="apple-classic">
+    <div class="menu-overlay" id="menuOverlay"></div>
+    <div class="menu-panel" id="menuPanel">
+        <div class="menu-header">
+            <h2 class="menu-title">Menu</h2>
+            <button class="menu-close" id="menuClose">×</button>
+        </div>
+        <div class="menu-content">
+            <div class="menu-section">
+                <div class="menu-section-title">Theme</div>
+                <button class="theme-option active" data-theme="apple-classic">Apple Classic</button>
+                <button class="theme-option" data-theme="craigslist">Craigslist</button>
+            </div>
+        </div>
+    </div>
     <div class="layout">
         <header class="header">
-            <h1 class="brand">Dawn & Dusk <span>— sunrise & sunset times</span></h1>
+            <div class="header-left">
+                <button class="hamburger-btn" id="hamburgerBtn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <h1 class="brand">Dawn & Dusk <span>— sunrise & sunset times</span></h1>
+            </div>
             <div class="controls-group">
                 <input
                     type="text"
@@ -690,6 +1027,57 @@
                     const view = btn.dataset.view;
                     setView(view);
                 });
+            });
+
+            // Hamburger menu
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const menuPanel = document.getElementById('menuPanel');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const menuClose = document.getElementById('menuClose');
+
+            function openMenu() {
+                menuPanel.classList.add('open');
+                menuOverlay.classList.add('visible');
+                hamburgerBtn.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeMenu() {
+                menuPanel.classList.remove('open');
+                menuOverlay.classList.remove('visible');
+                hamburgerBtn.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            hamburgerBtn.addEventListener('click', openMenu);
+            menuClose.addEventListener('click', closeMenu);
+            menuOverlay.addEventListener('click', closeMenu);
+
+            // Theme switcher
+            const themeOptions = document.querySelectorAll('.theme-option');
+            themeOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    const theme = option.dataset.theme;
+                    // Remove all theme classes
+                    document.body.classList.remove('apple-classic', 'craigslist');
+                    // Add selected theme
+                    document.body.classList.add(theme);
+                    // Update active state
+                    themeOptions.forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                    // Save to localStorage
+                    localStorage.setItem('theme', theme);
+                    // Close menu
+                    closeMenu();
+                });
+            });
+
+            // Load saved theme
+            const savedTheme = localStorage.getItem('theme') || 'apple-classic';
+            document.body.classList.remove('apple-classic', 'craigslist');
+            document.body.classList.add(savedTheme);
+            themeOptions.forEach(opt => {
+                opt.classList.toggle('active', opt.dataset.theme === savedTheme);
             });
         }
 
