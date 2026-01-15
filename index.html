@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dawn & Dusk - Sunrise & Sunset Times</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin="">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --color-bg: #f5f5f5;
+            --color-surface: #ffffff;
+            --color-text: #222222;
+            --color-text-muted: #666666;
+            --color-border: #cccccc;
+            --color-link: #0000ee;
+            --color-sunrise: #e67e00;
+            --color-sunset: #cc4400;
+            --font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+            --font-system: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --max-width: 900px;
+            --spacing-xs: 8px;
+            --spacing-sm: 12px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+        }
+
+        html {
+            font-size: 16px;
+        }
+
+        body {
+            font-family: var(--font-system);
+            background: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.4;
+            min-height: 100vh;
+            min-height: 100dvh;
+        }
+
+        /* Layout Container */
+        .container {
+            width: 100%;
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: var(--spacing-sm);
+        }
+
+        /* Header */
+        .header {
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .header h1 {
+            font-size: 1.25rem;
+            font-weight: normal;
+        }
+
+        .header h1 span {
+            color: var(--color-text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* Search Section */
+        .search-section {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .search-input-wrapper {
+            display: flex;
+            gap: var(--spacing-xs);
+        }
+
+        .search-input {
+            flex: 1;
+            padding: var(--spacing-sm);
+            font-size: 1rem;
+            border: 1px solid var(--color-border);
+            background: var(--color-surface);
+            font-family: inherit;
+            border-radius: 0;
+            -webkit-appearance: none;
+        }
+
+        .search-input:focus {
+            outline: 2px solid var(--color-text);
+            outline-offset: -2px;
+        }
+
+        .btn {
+            padding: var(--spacing-sm) var(--spacing-md);
+            font-size: 0.875rem;
+            border: 1px solid var(--color-border);
+            background: var(--color-surface);
+            cursor: pointer;
+            font-family: inherit;
+            white-space: nowrap;
+            border-radius: 0;
+            -webkit-appearance: none;
+        }
+
+        .btn:hover {
+            background: var(--color-bg);
+        }
+
+        .btn:active {
+            background: var(--color-border);
+        }
+
+        .btn-location {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        /* Map */
+        .map-container {
+            width: 100%;
+            height: 250px;
+            border: 1px solid var(--color-border);
+            margin-bottom: var(--spacing-md);
+            background: var(--color-surface);
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Location Info */
+        .location-info {
+            border: 1px solid var(--color-border);
+            background: var(--color-surface);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .location-header {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-bottom: 1px solid var(--color-border);
+            background: var(--color-bg);
+        }
+
+        .location-name {
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .location-date {
+            color: var(--color-text-muted);
+            font-size: 0.875rem;
+        }
+
+        .location-coords {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            margin-top: 4px;
+        }
+
+        /* Sun Times Table */
+        .sun-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .sun-table tr {
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .sun-table tr:last-child {
+            border-bottom: none;
+        }
+
+        .sun-table td {
+            padding: var(--spacing-sm) var(--spacing-md);
+            font-size: 0.9375rem;
+        }
+
+        .sun-table td:first-child {
+            color: var(--color-text-muted);
+            width: 50%;
+        }
+
+        .sun-table td:last-child {
+            font-family: var(--font-mono);
+            text-align: right;
+        }
+
+        .sun-table .sunrise td:last-child {
+            color: var(--color-sunrise);
+            font-weight: bold;
+        }
+
+        .sun-table .sunset td:last-child {
+            color: var(--color-sunset);
+            font-weight: bold;
+        }
+
+        /* Day Length */
+        .day-length {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-top: 1px solid var(--color-border);
+            background: var(--color-bg);
+            font-size: 0.875rem;
+            color: var(--color-text-muted);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: var(--spacing-lg);
+            padding-top: var(--spacing-sm);
+            border-top: 1px solid var(--color-border);
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+        }
+
+        .footer a {
+            color: var(--color-link);
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: var(--spacing-lg);
+            color: var(--color-text-muted);
+        }
+
+        /* Error State */
+        .error {
+            padding: var(--spacing-md);
+            background: #fff0f0;
+            border: 1px solid #ffcccc;
+            color: #cc0000;
+            margin-bottom: var(--spacing-md);
+            font-size: 0.875rem;
+        }
+
+        .error.hidden {
+            display: none;
+        }
+
+        /* ============================================
+           RESPONSIVE BREAKPOINTS
+           ============================================ */
+
+        /* Tablet Portrait (600px+) */
+        @media (min-width: 600px) {
+            .container {
+                padding: var(--spacing-md);
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .header h1 span {
+                font-size: 1rem;
+            }
+
+            .search-section {
+                flex-direction: row;
+                align-items: stretch;
+            }
+
+            .search-input-wrapper {
+                flex: 1;
+            }
+
+            .map-container {
+                height: 300px;
+            }
+
+            .sun-table td {
+                padding: var(--spacing-md);
+                font-size: 1rem;
+            }
+        }
+
+        /* Tablet Landscape / Small Desktop (900px+) */
+        @media (min-width: 900px) {
+            .container {
+                padding: var(--spacing-lg);
+            }
+
+            .header {
+                padding-bottom: var(--spacing-md);
+                margin-bottom: var(--spacing-lg);
+            }
+
+            .header h1 {
+                font-size: 1.75rem;
+            }
+
+            .search-section {
+                margin-bottom: var(--spacing-lg);
+            }
+
+            .search-input {
+                padding: var(--spacing-md);
+                font-size: 1.125rem;
+            }
+
+            .btn {
+                padding: var(--spacing-md) var(--spacing-lg);
+                font-size: 1rem;
+            }
+
+            .map-container {
+                height: 350px;
+            }
+
+            .location-header {
+                padding: var(--spacing-md) var(--spacing-lg);
+            }
+
+            .location-name {
+                font-size: 1.125rem;
+            }
+
+            .sun-table td {
+                padding: var(--spacing-md) var(--spacing-lg);
+                font-size: 1.0625rem;
+            }
+        }
+
+        /* Large Desktop (1200px+) */
+        @media (min-width: 1200px) {
+            :root {
+                --max-width: 1000px;
+            }
+
+            .map-container {
+                height: 400px;
+            }
+        }
+
+        /* Handle very small phones */
+        @media (max-width: 359px) {
+            html {
+                font-size: 14px;
+            }
+
+            .btn-location span.btn-text {
+                display: none;
+            }
+        }
+
+        /* Landscape phone adjustments */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .map-container {
+                height: 200px;
+            }
+        }
+
+        /* Touch device optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .btn {
+                min-height: 44px;
+            }
+
+            .search-input {
+                min-height: 44px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Dawn & Dusk <span>- sunrise & sunset times</span></h1>
+        </header>
+
+        <div id="error" class="error hidden"></div>
+
+        <section class="search-section">
+            <div class="search-input-wrapper">
+                <input
+                    type="text"
+                    id="search"
+                    class="search-input"
+                    placeholder="Search location..."
+                    autocomplete="off"
+                >
+                <button id="searchBtn" class="btn">Search</button>
+            </div>
+            <button id="locationBtn" class="btn btn-location">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M12 2v4m0 12v4m10-10h-4M6 12H2"/>
+                </svg>
+                <span class="btn-text">Use My Location</span>
+            </button>
+        </section>
+
+        <div class="map-container">
+            <div id="map"></div>
+        </div>
+
+        <section class="location-info" id="locationInfo">
+            <div class="location-header">
+                <div class="location-name" id="locationName">Loading...</div>
+                <div class="location-date" id="locationDate"></div>
+                <div class="location-coords" id="locationCoords"></div>
+            </div>
+            <table class="sun-table">
+                <tbody>
+                    <tr>
+                        <td>First Light</td>
+                        <td id="astroStart">--:--</td>
+                    </tr>
+                    <tr>
+                        <td>Dawn</td>
+                        <td id="nauticalStart">--:--</td>
+                    </tr>
+                    <tr>
+                        <td>Golden Hour</td>
+                        <td id="goldenStart">--:--</td>
+                    </tr>
+                    <tr class="sunrise">
+                        <td>Sunrise</td>
+                        <td id="sunrise">--:--</td>
+                    </tr>
+                    <tr class="sunset">
+                        <td>Sunset</td>
+                        <td id="sunset">--:--</td>
+                    </tr>
+                    <tr>
+                        <td>Golden Hour</td>
+                        <td id="goldenEnd">--:--</td>
+                    </tr>
+                    <tr>
+                        <td>Dusk</td>
+                        <td id="nauticalEnd">--:--</td>
+                    </tr>
+                    <tr>
+                        <td>Last Light</td>
+                        <td id="astroEnd">--:--</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="day-length" id="dayLength">
+                Day length: --h --m
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>Click anywhere on the map to see sun times for that location.</p>
+        </footer>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+
+    <!-- SunCalc -->
+    <script src="https://unpkg.com/suncalc@1.9.0/suncalc.js"></script>
+
+    <script>
+        // ============================================
+        // STATE
+        // ============================================
+        let map;
+        let marker;
+        let currentLat = 37.7749;
+        let currentLng = -122.4194;
+        let currentLocationName = 'San Francisco, CA';
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            initMap();
+            initEventListeners();
+            updateSunTimes(currentLat, currentLng, currentLocationName);
+        });
+
+        function initMap() {
+            map = L.map('map').setView([currentLat, currentLng], 10);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                maxZoom: 19
+            }).addTo(map);
+
+            // Add initial marker
+            marker = L.marker([currentLat, currentLng]).addTo(map);
+
+            // Click on map to select location
+            map.on('click', function(e) {
+                const lat = e.latlng.lat;
+                const lng = e.latlng.lng;
+                setLocation(lat, lng);
+                reverseGeocode(lat, lng);
+            });
+        }
+
+        function initEventListeners() {
+            document.getElementById('searchBtn').addEventListener('click', performSearch);
+
+            document.getElementById('search').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+
+            document.getElementById('locationBtn').addEventListener('click', getUserLocation);
+        }
+
+        // ============================================
+        // LOCATION FUNCTIONS
+        // ============================================
+        function setLocation(lat, lng, name) {
+            currentLat = lat;
+            currentLng = lng;
+
+            if (marker) {
+                marker.setLatLng([lat, lng]);
+            } else {
+                marker = L.marker([lat, lng]).addTo(map);
+            }
+
+            map.setView([lat, lng], map.getZoom());
+            updateSunTimes(lat, lng, name || currentLocationName);
+        }
+
+        function getUserLocation() {
+            hideError();
+
+            if (!navigator.geolocation) {
+                showError('Geolocation is not supported by your browser');
+                return;
+            }
+
+            const btn = document.getElementById('locationBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span>Locating...</span>';
+
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    setLocation(lat, lng);
+                    reverseGeocode(lat, lng);
+                    map.setZoom(12);
+                    resetLocationButton();
+                },
+                function(error) {
+                    let message = 'Unable to get your location. ';
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            message += 'Permission denied.';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            message += 'Position unavailable.';
+                            break;
+                        case error.TIMEOUT:
+                            message += 'Request timed out.';
+                            break;
+                    }
+                    showError(message);
+                    resetLocationButton();
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 300000
+                }
+            );
+        }
+
+        function resetLocationButton() {
+            const btn = document.getElementById('locationBtn');
+            btn.disabled = false;
+            btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m10-10h-4M6 12H2"/></svg><span class="btn-text">Use My Location</span>';
+        }
+
+        // ============================================
+        // SEARCH & GEOCODING
+        // ============================================
+        function performSearch() {
+            const query = document.getElementById('search').value.trim();
+            if (!query) return;
+
+            hideError();
+            geocode(query);
+        }
+
+        function geocode(query) {
+            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`;
+
+            fetch(url, {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.length > 0) {
+                    const result = data[0];
+                    const lat = parseFloat(result.lat);
+                    const lng = parseFloat(result.lon);
+                    const name = result.display_name.split(',').slice(0, 2).join(',');
+
+                    setLocation(lat, lng, name);
+                    currentLocationName = name;
+                    map.setZoom(12);
+                } else {
+                    showError('Location not found. Try a different search term.');
+                }
+            })
+            .catch(error => {
+                showError('Search failed. Please try again.');
+                console.error('Geocoding error:', error);
+            });
+        }
+
+        function reverseGeocode(lat, lng) {
+            const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`;
+
+            fetch(url, {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.display_name) {
+                    const name = data.display_name.split(',').slice(0, 2).join(',');
+                    currentLocationName = name;
+                    updateSunTimes(lat, lng, name);
+                }
+            })
+            .catch(error => {
+                console.error('Reverse geocoding error:', error);
+                currentLocationName = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+                updateSunTimes(lat, lng, currentLocationName);
+            });
+        }
+
+        // ============================================
+        // SUN CALCULATIONS
+        // ============================================
+        function updateSunTimes(lat, lng, locationName) {
+            const now = new Date();
+            const times = SunCalc.getTimes(now, lat, lng);
+
+            document.getElementById('locationName').textContent = locationName;
+            document.getElementById('locationDate').textContent = formatDate(now);
+            document.getElementById('locationCoords').textContent = `${lat.toFixed(4)}°, ${lng.toFixed(4)}°`;
+
+            document.getElementById('astroStart').textContent = formatTime(times.nightEnd);
+            document.getElementById('nauticalStart').textContent = formatTime(times.nauticalDawn);
+            document.getElementById('goldenStart').textContent = formatTime(times.goldenHourEnd);
+            document.getElementById('sunrise').textContent = formatTime(times.sunrise);
+            document.getElementById('sunset').textContent = formatTime(times.sunset);
+            document.getElementById('goldenEnd').textContent = formatTime(times.goldenHour);
+            document.getElementById('nauticalEnd').textContent = formatTime(times.nauticalDusk);
+            document.getElementById('astroEnd').textContent = formatTime(times.night);
+
+            if (times.sunrise && times.sunset && !isNaN(times.sunrise) && !isNaN(times.sunset)) {
+                const dayLengthMs = times.sunset - times.sunrise;
+                const hours = Math.floor(dayLengthMs / (1000 * 60 * 60));
+                const minutes = Math.floor((dayLengthMs % (1000 * 60 * 60)) / (1000 * 60));
+                document.getElementById('dayLength').textContent = `Day length: ${hours}h ${minutes}m`;
+            } else {
+                document.getElementById('dayLength').textContent = 'Day length: --';
+            }
+        }
+
+        // ============================================
+        // FORMATTING HELPERS
+        // ============================================
+        function formatTime(date) {
+            if (!date || isNaN(date)) return '--:--';
+
+            return date.toLocaleTimeString([], {
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
+        }
+
+        function formatDate(date) {
+            return date.toLocaleDateString([], {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // ============================================
+        // ERROR HANDLING
+        // ============================================
+        function showError(message) {
+            const errorEl = document.getElementById('error');
+            errorEl.textContent = message;
+            errorEl.classList.remove('hidden');
+        }
+
+        function hideError() {
+            document.getElementById('error').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
