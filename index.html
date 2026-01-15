@@ -118,7 +118,7 @@
 
         .brand {
             font-family: var(--font-serif);
-            font-size: 1.75rem;
+            font-size: 2.25rem;
             font-weight: bold;
             letter-spacing: -0.02em;
             color: var(--color-text);
@@ -174,6 +174,13 @@
         .btn:active {
             border-style: inset;
             background: #bbbbbb;
+        }
+
+        .btn-icon {
+            padding: 10px;
+            width: 40px;
+            height: 40px;
+            justify-content: center;
         }
 
         /* View Toggle */
@@ -429,6 +436,36 @@
             color: var(--color-text);
         }
 
+        /* App Download */
+        .app-download {
+            padding: 16px 24px;
+            border-top: 2px groove var(--color-border);
+            background: var(--color-surface);
+        }
+
+        .app-store-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: #000000;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border: 2px outset #333333;
+        }
+
+        .app-store-link:hover {
+            background: #222222;
+        }
+
+        .app-store-link:active {
+            border-style: inset;
+            background: #111111;
+        }
+
         /* Map Container */
         .map-container {
             position: relative;
@@ -515,146 +552,6 @@
 
         .error-banner.visible {
             display: block;
-        }
-
-        /* ============================================
-           HAMBURGER MENU
-           ============================================ */
-        .hamburger-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            align-items: center;
-            justify-content: center;
-            width: 32px;
-            height: 32px;
-        }
-
-        .hamburger-btn span {
-            display: block;
-            width: 20px;
-            height: 2px;
-            background: var(--color-text);
-            transition: all 0.3s ease;
-        }
-
-        .hamburger-btn.active span:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 5px);
-        }
-
-        .hamburger-btn.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .hamburger-btn.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(7px, -6px);
-        }
-
-        .menu-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 9998;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-
-        .menu-overlay.visible {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .menu-panel {
-            position: fixed;
-            top: 0;
-            right: -320px;
-            width: 320px;
-            height: 100%;
-            background: var(--color-surface);
-            box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
-            z-index: 9999;
-            transition: right 0.3s ease;
-            overflow-y: auto;
-        }
-
-        .menu-panel.open {
-            right: 0;
-        }
-
-        .menu-header {
-            padding: 20px 24px;
-            border-bottom: 1px solid var(--color-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .menu-title {
-            font-size: 1.125rem;
-            font-weight: 600;
-        }
-
-        .menu-close {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1.5rem;
-            color: var(--color-text-muted);
-            padding: 0;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .menu-content {
-            padding: 24px;
-        }
-
-        .menu-section {
-            margin-bottom: 24px;
-        }
-
-        .menu-section-title {
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--color-text-muted);
-            margin-bottom: 12px;
-        }
-
-        .theme-option {
-            display: block;
-            width: 100%;
-            padding: 12px 16px;
-            margin-bottom: 8px;
-            background: var(--color-bg);
-            border: 1px solid var(--color-border);
-            border-radius: 4px;
-            cursor: pointer;
-            text-align: left;
-            font-size: 0.9375rem;
-            transition: all 0.2s ease;
-        }
-
-        .theme-option:hover {
-            background: #e5e5e5;
-        }
-
-        .theme-option.active {
-            background: var(--color-text);
-            color: white;
-            border-color: var(--color-text);
         }
 
         /* ============================================
@@ -894,30 +791,9 @@
     </style>
 </head>
 <body class="apple-classic">
-    <div class="menu-overlay" id="menuOverlay"></div>
-    <div class="menu-panel" id="menuPanel">
-        <div class="menu-header">
-            <h2 class="menu-title">Menu</h2>
-            <button class="menu-close" id="menuClose">×</button>
-        </div>
-        <div class="menu-content">
-            <div class="menu-section">
-                <div class="menu-section-title">Theme</div>
-                <button class="theme-option active" data-theme="apple-classic">Apple Classic</button>
-                <button class="theme-option" data-theme="craigslist">Craigslist</button>
-            </div>
-        </div>
-    </div>
     <div class="layout">
         <header class="header">
-            <div class="header-left">
-                <button class="hamburger-btn" id="hamburgerBtn">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-                <h1 class="brand">Dawn & Dusk <span>— sunrise & sunset times</span></h1>
-            </div>
+            <h1 class="brand">Dawn & Dusk</h1>
             <div class="controls-group">
                 <input
                     type="text"
@@ -927,12 +803,10 @@
                     autocomplete="off"
                 >
                 <button id="searchBtn" class="btn">Search</button>
-                <button id="locationBtn" class="btn">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="3"/>
-                        <path d="M12 2v4m0 12v4m10-10h-4M6 12H2"/>
+                <button id="locationBtn" class="btn btn-icon" title="My Location">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="3 11 22 2 13 21 11 13 3 11"/>
                     </svg>
-                    <span>My Location</span>
                 </button>
                 <div class="view-toggle">
                     <button class="view-toggle-btn" data-view="2d">2D</button>
@@ -971,19 +845,6 @@
             </div>
 
             <div class="sun-times">
-                <div class="sun-times-header">Sun Times</div>
-                <div class="sun-time-row">
-                    <span class="sun-time-label">First Light</span>
-                    <span class="sun-time-value" id="firstLight">--:--</span>
-                </div>
-                <div class="sun-time-row">
-                    <span class="sun-time-label">Dawn</span>
-                    <span class="sun-time-value" id="dawn">--:--</span>
-                </div>
-                <div class="sun-time-row">
-                    <span class="sun-time-label">Golden Hour</span>
-                    <span class="sun-time-value" id="goldenAM">--:--</span>
-                </div>
                 <div class="sun-time-row sunrise">
                     <span class="sun-time-label">Sunrise</span>
                     <span class="sun-time-value" id="sunrise">--:--</span>
@@ -992,23 +853,15 @@
                     <span class="sun-time-label">Sunset</span>
                     <span class="sun-time-value" id="sunset">--:--</span>
                 </div>
-                <div class="sun-time-row">
-                    <span class="sun-time-label">Golden Hour</span>
-                    <span class="sun-time-value" id="goldenPM">--:--</span>
-                </div>
-                <div class="sun-time-row">
-                    <span class="sun-time-label">Dusk</span>
-                    <span class="sun-time-value" id="dusk">--:--</span>
-                </div>
-                <div class="sun-time-row">
-                    <span class="sun-time-label">Last Light</span>
-                    <span class="sun-time-value" id="lastLight">--:--</span>
-                </div>
             </div>
 
-            <div class="day-length">
-                <span class="day-length-label">Day Length</span>
-                <span class="day-length-value" id="dayLength">--h --m</span>
+            <div class="app-download">
+                <a href="https://apps.apple.com/us/app/dawn-and-dusk/id6736839971" target="_blank" rel="noopener" class="app-store-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                    </svg>
+                    Download on the App Store
+                </a>
             </div>
         </aside>
 
@@ -1339,9 +1192,6 @@
 
             const btn = document.getElementById('locationBtn');
             btn.disabled = true;
-            const spanEl = btn.querySelector('span');
-            const originalText = spanEl ? spanEl.textContent : '';
-            if (spanEl) spanEl.textContent = 'Locating...';
 
             navigator.geolocation.getCurrentPosition(
                 (position) => {
@@ -1351,7 +1201,7 @@
                     if (currentView === '2d') {
                         leafletMap.setZoom(12);
                     }
-                    resetLocationButton(btn, spanEl, originalText);
+                    btn.disabled = false;
                 },
                 (error) => {
                     const messages = {
@@ -1360,15 +1210,10 @@
                         3: 'Request timed out'
                     };
                     showError(messages[error.code] || 'Unable to get location');
-                    resetLocationButton(btn, spanEl, originalText);
+                    btn.disabled = false;
                 },
                 { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 }
             );
-        }
-
-        function resetLocationButton(btn, spanEl, text) {
-            btn.disabled = false;
-            if (spanEl) spanEl.textContent = text;
         }
 
         // ============================================
@@ -1430,23 +1275,8 @@
             document.getElementById('locationName').textContent = locationName;
             document.getElementById('coordsDisplay').textContent = formatCoords(lat, lng);
 
-            document.getElementById('firstLight').textContent = formatTime(times.nightEnd);
-            document.getElementById('dawn').textContent = formatTime(times.nauticalDawn);
-            document.getElementById('goldenAM').textContent = formatTime(times.goldenHourEnd);
             document.getElementById('sunrise').textContent = formatTime(times.sunrise);
             document.getElementById('sunset').textContent = formatTime(times.sunset);
-            document.getElementById('goldenPM').textContent = formatTime(times.goldenHour);
-            document.getElementById('dusk').textContent = formatTime(times.nauticalDusk);
-            document.getElementById('lastLight').textContent = formatTime(times.night);
-
-            if (times.sunrise && times.sunset && !isNaN(times.sunrise) && !isNaN(times.sunset)) {
-                const ms = times.sunset - times.sunrise;
-                const hours = Math.floor(ms / 3600000);
-                const minutes = Math.floor((ms % 3600000) / 60000);
-                document.getElementById('dayLength').textContent = `${hours}h ${minutes}m`;
-            } else {
-                document.getElementById('dayLength').textContent = '--';
-            }
         }
 
         function updateDateDisplay() {
