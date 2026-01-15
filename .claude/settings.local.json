@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git push:*)",
+      "Bash(gh auth:*)",
+      "Bash(git remote set-url:*)",
+      "Bash(ssh:*)",
+      "Bash(ssh-add:*)",
+      "Bash(ssh-keygen:*)",
+      "Bash(gh api:*)"
+    ]
+  }
+}

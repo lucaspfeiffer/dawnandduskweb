@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dawn & Dusk - Sunrise & Sunset Times</title>
 
+    <!-- Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
           integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
@@ -27,7 +32,8 @@
             --color-sunrise: #e67e00;
             --color-sunset: #cc4400;
             --font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
-            --font-system: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --font-serif: Garamond, 'EB Garamond', 'Adobe Garamond Pro', Georgia, 'Times New Roman', serif;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             --max-width: 900px;
             --spacing-xs: 8px;
             --spacing-sm: 12px;
@@ -40,10 +46,10 @@
         }
 
         body {
-            font-family: var(--font-system);
+            font-family: var(--font-sans);
             background: var(--color-bg);
             color: var(--color-text);
-            line-height: 1.4;
+            line-height: 1.5;
             min-height: 100vh;
             min-height: 100dvh;
         }
@@ -64,7 +70,8 @@
         }
 
         .header h1 {
-            font-size: 1.25rem;
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
             font-weight: normal;
         }
 
@@ -157,8 +164,9 @@
         }
 
         .location-name {
-            font-weight: bold;
-            font-size: 1rem;
+            font-family: var(--font-serif);
+            font-weight: normal;
+            font-size: 1.125rem;
         }
 
         .location-date {
