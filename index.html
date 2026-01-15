@@ -614,6 +614,117 @@
             color: #000000;
         }
 
+        body.apple-classic .mobile-view-toggle {
+            border-top: 2px outset #c0c0c0;
+            background: #e0e0e0;
+        }
+
+        body.apple-classic .mobile-view-btn {
+            background: #e0e0e0;
+            font-family: 'Courier New', 'Monaco', monospace;
+        }
+
+        body.apple-classic .mobile-view-btn.active {
+            background: #ffffff;
+        }
+
+        body.apple-classic .mobile-info-overlay {
+            background: #ffffff;
+            border: 2px outset #c0c0c0;
+        }
+
+        /* Mobile View Toggle */
+        .mobile-view-toggle {
+            display: none;
+            border-top: 2px solid var(--color-border);
+            background: var(--color-surface);
+        }
+
+        .mobile-view-toggle-inner {
+            display: flex;
+        }
+
+        .mobile-view-btn {
+            flex: 1;
+            padding: 14px 16px;
+            font-size: 0.875rem;
+            font-family: var(--font-sans);
+            font-weight: 500;
+            border: none;
+            background: var(--color-bg);
+            cursor: pointer;
+            color: var(--color-text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .mobile-view-btn + .mobile-view-btn {
+            border-left: 2px solid var(--color-border);
+        }
+
+        .mobile-view-btn.active {
+            background: var(--color-surface);
+            color: var(--color-text);
+            font-weight: 600;
+        }
+
+        .mobile-view-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Mobile Info Overlay (shown on map view) */
+        .mobile-info-overlay {
+            display: none;
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            right: 12px;
+            background: var(--color-surface);
+            border: 2px outset var(--color-border);
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+            z-index: 1000;
+            padding: 12px 16px;
+        }
+
+        .mobile-info-location {
+            font-family: var(--font-serif);
+            font-size: 1.125rem;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .mobile-info-coords {
+            font-size: 0.8125rem;
+            color: var(--color-text-muted);
+            margin-bottom: 12px;
+        }
+
+        .mobile-info-times {
+            display: flex;
+            gap: 24px;
+        }
+
+        .mobile-info-time {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mobile-info-time-label {
+            font-size: 0.6875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-muted);
+        }
+
+        .mobile-info-time-value {
+            font-size: 1.125rem;
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+        }
+
         /* Responsive */
         @media (max-width: 900px) {
             .layout {
@@ -642,16 +753,51 @@
                 min-width: 150px;
             }
 
+            /* Hide desktop view toggle on mobile */
+            .view-toggle {
+                display: none;
+            }
+
+            /* Mobile view toggle */
+            .mobile-view-toggle {
+                display: block;
+                grid-column: 1 / -1;
+                order: 4;
+            }
+
+            /* Default: show sidebar, hide map */
             .sidebar {
-                order: 3;
+                order: 2;
                 border-right: none;
-                border-top: 1px solid var(--color-border);
-                max-height: 50vh;
+                flex: 1;
+                max-height: none;
+                overflow-y: auto;
             }
 
             .map-container {
-                order: 2;
-                min-height: 300px;
+                order: 3;
+                display: none;
+                min-height: 0;
+                flex: 1;
+            }
+
+            /* When map view is active */
+            .layout.mobile-map-view .sidebar {
+                display: none;
+            }
+
+            .layout.mobile-map-view .map-container {
+                display: block;
+                flex: 1;
+            }
+
+            .layout.mobile-map-view .mobile-info-overlay {
+                display: block;
+            }
+
+            /* Hide map hint on mobile - overlay serves this purpose */
+            .map-hint {
+                display: none;
             }
         }
 
@@ -678,6 +824,21 @@
 
             .btn span {
                 display: none;
+            }
+
+            .mobile-info-overlay {
+                top: 8px;
+                left: 8px;
+                right: 8px;
+                padding: 10px 14px;
+            }
+
+            .mobile-info-location {
+                font-size: 1rem;
+            }
+
+            .mobile-info-times {
+                gap: 16px;
             }
         }
     </style>
@@ -774,6 +935,44 @@
             <div id="map"></div>
             <div id="globe"></div>
             <div class="map-hint" id="mapHint">Click to select location · Scroll to zoom · Drag to rotate</div>
+
+            <!-- Mobile Info Overlay -->
+            <div class="mobile-info-overlay" id="mobileInfoOverlay">
+                <div class="mobile-info-location" id="mobileLocationName">San Francisco, CA</div>
+                <div class="mobile-info-coords" id="mobileCoordsDisplay">37.7749° N, 122.4194° W</div>
+                <div class="mobile-info-times">
+                    <div class="mobile-info-time">
+                        <span class="mobile-info-time-label">Sunrise</span>
+                        <span class="mobile-info-time-value" id="mobileSunrise">--:--</span>
+                    </div>
+                    <div class="mobile-info-time">
+                        <span class="mobile-info-time-label">Sunset</span>
+                        <span class="mobile-info-time-value" id="mobileSunset">--:--</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile View Toggle -->
+        <div class="mobile-view-toggle">
+            <div class="mobile-view-toggle-inner">
+                <button class="mobile-view-btn active" data-mobile-view="info">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                    Info
+                </button>
+                <button class="mobile-view-btn" data-mobile-view="map">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+                        <line x1="8" y1="2" x2="8" y2="18"/>
+                        <line x1="16" y1="6" x2="16" y2="22"/>
+                    </svg>
+                    Map
+                </button>
+            </div>
         </div>
     </div>
 
@@ -977,6 +1176,14 @@
             document.getElementById('yearlyModal').addEventListener('click', (e) => {
                 if (e.target === e.currentTarget) closeYearlyView();
             });
+
+            // Mobile view toggle
+            document.querySelectorAll('.mobile-view-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const view = btn.dataset.mobileView;
+                    setMobileView(view);
+                });
+            });
         }
 
         // ============================================
@@ -1010,6 +1217,34 @@
                     globe.width(w);
                     globe.height(h);
                 }, 100);
+            }
+        }
+
+        // ============================================
+        // MOBILE VIEW TOGGLE
+        // ============================================
+        function setMobileView(view) {
+            const layout = document.querySelector('.layout');
+
+            document.querySelectorAll('.mobile-view-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.mobileView === view);
+            });
+
+            if (view === 'map') {
+                layout.classList.add('mobile-map-view');
+                // Refresh map/globe when switching to map view
+                setTimeout(() => {
+                    if (currentView === '2d') {
+                        leafletMap.invalidateSize();
+                        leafletMap.setView([currentLat, currentLng], leafletMap.getZoom());
+                    } else {
+                        const container = document.getElementById('mapContainer');
+                        globe.width(container.clientWidth);
+                        globe.height(container.clientHeight);
+                    }
+                }, 100);
+            } else {
+                layout.classList.remove('mobile-map-view');
             }
         }
 
@@ -1177,12 +1412,21 @@
         function updateDisplay(lat, lng, locationName) {
             const now = new Date();
             const times = SunCalc.getTimes(now, lat, lng);
+            const coordsText = formatCoords(lat, lng);
+            const sunriseText = formatTime(times.sunrise);
+            const sunsetText = formatTime(times.sunset);
 
+            // Update main sidebar
             document.getElementById('locationName').textContent = locationName;
-            document.getElementById('coordsDisplay').textContent = formatCoords(lat, lng);
+            document.getElementById('coordsDisplay').textContent = coordsText;
+            document.getElementById('sunrise').textContent = sunriseText;
+            document.getElementById('sunset').textContent = sunsetText;
 
-            document.getElementById('sunrise').textContent = formatTime(times.sunrise);
-            document.getElementById('sunset').textContent = formatTime(times.sunset);
+            // Update mobile info overlay
+            document.getElementById('mobileLocationName').textContent = locationName;
+            document.getElementById('mobileCoordsDisplay').textContent = coordsText;
+            document.getElementById('mobileSunrise').textContent = sunriseText;
+            document.getElementById('mobileSunset').textContent = sunsetText;
         }
 
         function updateDateDisplay() {
