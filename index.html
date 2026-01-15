@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dawn & Dusk</title>
 
     <!-- Fonts -->
@@ -72,24 +72,16 @@
             --font-sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         }
 
-        html {
+        html, body {
             height: 100%;
-            /* Safe area background - matches header/sidebar */
-            background: #ffffff;
         }
 
         body {
-            height: 100%;
             overflow: hidden;
             font-family: var(--font-sans);
             background: var(--color-bg);
             color: var(--color-text);
             line-height: 1.5;
-            /* Safe area support for notched devices */
-            padding-top: env(safe-area-inset-top);
-            padding-bottom: env(safe-area-inset-bottom);
-            padding-left: env(safe-area-inset-left);
-            padding-right: env(safe-area-inset-right);
         }
 
         /* Layout */
@@ -99,6 +91,7 @@
             grid-template-rows: auto 1fr;
             height: 100vh;
             height: 100dvh;
+            background: var(--color-bg);
         }
 
         /* Header */
@@ -669,6 +662,9 @@
 
         body.apple-classic .mobile-view-toggle {
             border-bottom: 2px outset #c0c0c0;
+        }
+
+        body.apple-classic .mobile-view-toggle-inner {
             background: #c0c0c0;
         }
 
@@ -860,17 +856,11 @@
                 display: none;
             }
 
-            /* Remove body top padding on mobile - toggle handles it */
-            body {
-                padding-top: 0;
-            }
-
             /* Mobile view toggle - at very top */
             .mobile-view-toggle {
                 display: block;
                 grid-column: 1 / -1;
                 order: 0;
-                padding-top: env(safe-area-inset-top);
             }
 
             .header {
@@ -937,7 +927,7 @@
             .layout.mobile-map-view .mobile-map-toggle {
                 display: flex;
                 position: absolute;
-                bottom: calc(16px + env(safe-area-inset-bottom));
+                bottom: 16px;
                 left: 50%;
                 transform: translateX(-50%);
                 z-index: 1000;
