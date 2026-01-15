@@ -17,10 +17,47 @@
           crossorigin="">
 
     <style>
+        /* ============================================
+           RESET & MOBILE CONSISTENCY
+           ============================================ */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+
+        /* Prevent mobile browsers from adjusting font sizes */
+        html {
+            -webkit-text-size-adjust: 100%;
+            -moz-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+
+        /* Reset button and input styles for mobile */
+        button, input, select, textarea {
+            font: inherit;
+            color: inherit;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border-radius: 0;
+        }
+
+        /* Remove tap highlight on mobile */
+        button, a, input, select, textarea {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Ensure SVGs inherit color properly */
+        svg {
+            display: block;
+            flex-shrink: 0;
+        }
+
+        /* Ensure buttons and their contents have correct colors */
+        button svg {
+            color: inherit;
+            stroke: currentColor;
         }
 
         :root {
@@ -105,6 +142,7 @@
             font-family: var(--font-sans);
             border: 2px inset var(--color-border);
             background: white;
+            color: var(--color-text);
             outline: none;
             border-radius: 0;
         }
@@ -120,6 +158,7 @@
             font-weight: 500;
             border: 2px outset var(--color-border);
             background: var(--color-surface);
+            color: var(--color-text);
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -324,6 +363,11 @@
             background: #222222;
         }
 
+        .app-store-link:visited,
+        .app-store-link:active {
+            color: #ffffff;
+        }
+
         .app-store-link:active {
             border-style: inset;
             background: #111111;
@@ -413,6 +457,7 @@
             width: 28px;
             height: 28px;
             font-size: 1.25rem;
+            color: var(--color-text);
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -815,16 +860,26 @@
                 display: none;
             }
 
-            /* Mobile view toggle - sticky at top below header */
+            /* Remove body top padding on mobile - toggle handles it */
+            body {
+                padding-top: 0;
+            }
+
+            /* Mobile view toggle - at very top */
             .mobile-view-toggle {
                 display: block;
                 grid-column: 1 / -1;
-                order: 2;
+                order: 0;
+                padding-top: env(safe-area-inset-top);
+            }
+
+            .header {
+                order: 1;
             }
 
             /* Default: show sidebar, hide map */
             .sidebar {
-                order: 3;
+                order: 2;
                 border-right: none;
                 border-top: none;
                 flex: 1;
@@ -854,7 +909,7 @@
             }
 
             .map-container {
-                order: 3;
+                order: 2;
                 display: none;
                 min-height: 0;
                 flex: 1;
