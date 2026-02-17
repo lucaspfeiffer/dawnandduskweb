@@ -225,6 +225,7 @@
 
         async function fetchPhotos(cursor) {
             const container = CloudKit.getDefaultContainer();
+            await container.setUpAuth();
             const db = container.publicCloudDatabase;
 
             const query = {
@@ -360,7 +361,14 @@
         });
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', loadPhotos);
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                loadPhotos();
+            } catch (err) {
+                console.error('Init error:', err);
+                document.getElementById('loading').textContent = 'Failed to load photos. Please try again later.';
+            }
+        });
     </script>
 </body>
 </html>
