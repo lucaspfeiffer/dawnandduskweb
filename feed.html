@@ -315,7 +315,7 @@
                 }
             } catch (err) {
                 console.error('Failed to load photos:', err);
-                document.getElementById('loading').textContent = 'Failed to load photos. Please try again later.';
+                document.getElementById('loading').textContent = 'Error: ' + (err.message || JSON.stringify(err));
             }
         }
 
