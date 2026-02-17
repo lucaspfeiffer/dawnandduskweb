@@ -1,0 +1,39 @@
+name: Sync Photos from CloudKit
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install sharp
+
+      - name: Sync photos from CloudKit
+        run: node scripts/sync-photos.js
+        env:
+          CLOUDKIT_API_TOKEN: ${{ secrets.CLOUDKIT_API_TOKEN }}
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add photos/ photos.json
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Sync photos from CloudKit"
+            git push
+          fi

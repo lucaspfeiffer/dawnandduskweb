@@ -204,75 +204,13 @@
         <img id="lightboxImg" src="" alt="Full size photo">
     </div>
 
-    <script src="https://cdn.apple-cloudkit.com/ck/2/cloudkit.js"></script>
     <script>
-        // Configure CloudKit
-        CloudKit.configure({
-            containers: [{
-                containerIdentifier: 'iCloud.lucaspfeiffer.sun',
-                apiTokenAuth: {
-                    // Replace with your actual CloudKit JS API token from the dashboard
-                    apiToken: '9bf4a00d2cdb651f690bac2f8cd33023b7b74198164031b45eac8f88cbe79fe5',
-                    persist: false
-                },
-                environment: 'production'
-            }]
-        });
-
         const PAGE_SIZE = 20;
-        let continuationMarker = null;
         let allPhotos = [];
+        let displayedCount = 0;
 
-        async function fetchPhotos(cursor) {
-            const container = CloudKit.getDefaultContainer();
-            const db = container.publicCloudDatabase;
-
-            const query = {
-                recordType: 'SunPhoto',
-                filterBy: [{
-                    fieldName: 'status',
-                    comparator: 'EQUALS',
-                    fieldValue: { value: 'approved' }
-                }]
-            };
-
-            const options = {
-                resultsLimit: PAGE_SIZE
-            };
-
-            if (cursor) {
-                options.continuationMarker = cursor;
-            }
-
-            const response = await db.performQuery(query, options);
-
-            if (response.hasErrors) {
-                console.error('CloudKit query error:', response.errors);
-                return { records: [], hasMore: false };
-            }
-
-            continuationMarker = response.continuationMarker || null;
-
-            const records = (response.records || []).sort((a, b) => {
-                const dateA = a.fields.captureDate ? a.fields.captureDate.value : 0;
-                const dateB = b.fields.captureDate ? b.fields.captureDate.value : 0;
-                return dateB - dateA;
-            });
-
-            return {
-                records,
-                hasMore: !!continuationMarker
-            };
-        }
-
-        function renderPhoto(record) {
-            const fields = record.fields;
-            const thumbnailURL = fields.thumbnail ? fields.thumbnail.value.downloadURL : '';
-            const imageURL = fields.image ? fields.image.value.downloadURL : '';
-            const locationName = fields.locationName ? fields.locationName.value : 'Unknown';
-            const captureDate = fields.captureDate ? new Date(fields.captureDate.value) : new Date();
-
-            const dateStr = captureDate.toLocaleDateString('en-US', {
+        function renderPhoto(photo) {
+            const dateStr = new Date(photo.captureDate).toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'short',
                 day: 'numeric'
@@ -281,69 +219,66 @@
             const card = document.createElement('div');
             card.className = 'photo-card';
             card.innerHTML = `
-                <img src="${thumbnailURL}" alt="Sunset photo from ${locationName}" loading="lazy"
-                     onclick="openLightbox('${imageURL}')" style="cursor:pointer;">
+                <img src="${photo.thumbnail}" alt="Sunset photo from ${photo.locationName}" loading="lazy"
+                     onclick="openLightbox('${photo.image}')" style="cursor:pointer;">
                 <div class="photo-meta">
-                    <div class="photo-location">${locationName}</div>
+                    <div class="photo-location">${photo.locationName}</div>
                     <div class="photo-date">${dateStr}</div>
                 </div>
             `;
             return card;
         }
 
+        function showPhotos(startIndex, count) {
+            const gallery = document.getElementById('gallery');
+            const end = Math.min(startIndex + count, allPhotos.length);
+            for (let i = startIndex; i < end; i++) {
+                gallery.appendChild(renderPhoto(allPhotos[i]));
+            }
+            displayedCount = end;
+
+            const loadMoreBtn = document.getElementById('loadMore');
+            if (displayedCount < allPhotos.length) {
+                loadMoreBtn.style.display = 'block';
+            } else {
+                loadMoreBtn.style.display = 'none';
+            }
+        }
+
         async function loadPhotos() {
             try {
-                const { records, hasMore } = await fetchPhotos(null);
-                const gallery = document.getElementById('gallery');
+                const res = await fetch('photos.json');
+                if (!res.ok) throw new Error(`Failed to fetch photos.json: ${res.status}`);
+                allPhotos = await res.json();
+
+                // Already sorted by captureDate desc in the manifest, but ensure it
+                allPhotos.sort((a, b) => b.captureDate - a.captureDate);
+
                 const loading = document.getElementById('loading');
                 const empty = document.getElementById('empty');
-                const loadMoreBtn = document.getElementById('loadMore');
 
                 loading.style.display = 'none';
 
-                if (records.length === 0) {
+                if (allPhotos.length === 0) {
                     empty.style.display = 'block';
                     return;
                 }
 
-                gallery.style.display = 'grid';
-                records.forEach(record => {
-                    gallery.appendChild(renderPhoto(record));
-                });
-
-                if (hasMore) {
-                    loadMoreBtn.style.display = 'block';
-                }
+                document.getElementById('gallery').style.display = 'grid';
+                showPhotos(0, PAGE_SIZE);
             } catch (err) {
                 console.error('Failed to load photos:', err);
                 document.getElementById('loading').textContent = 'Error: ' + (err.message || JSON.stringify(err));
             }
         }
 
-        async function loadMore() {
+        function loadMore() {
             const btn = document.getElementById('loadMore');
             btn.disabled = true;
             btn.textContent = 'Loading...';
-
-            try {
-                const { records, hasMore } = await fetchPhotos(continuationMarker);
-                const gallery = document.getElementById('gallery');
-
-                records.forEach(record => {
-                    gallery.appendChild(renderPhoto(record));
-                });
-
-                if (!hasMore) {
-                    btn.style.display = 'none';
-                } else {
-                    btn.disabled = false;
-                    btn.textContent = 'Load More';
-                }
-            } catch (err) {
-                console.error('Failed to load more:', err);
-                btn.disabled = false;
-                btn.textContent = 'Load More';
-            }
+            showPhotos(displayedCount, PAGE_SIZE);
+            btn.disabled = false;
+            btn.textContent = 'Load More';
         }
 
         function openLightbox(url) {
@@ -361,15 +296,7 @@
             if (e.key === 'Escape') closeLightbox();
         });
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            try {
-                loadPhotos();
-            } catch (err) {
-                console.error('Init error:', err);
-                document.getElementById('loading').textContent = 'Failed to load photos. Please try again later.';
-            }
-        });
+        document.addEventListener('DOMContentLoaded', loadPhotos);
     </script>
 </body>
 </html>
