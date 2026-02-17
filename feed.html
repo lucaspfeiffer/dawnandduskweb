@@ -225,7 +225,6 @@
 
         async function fetchPhotos(cursor) {
             const container = CloudKit.getDefaultContainer();
-            await container.setUpAuth();
             const db = container.publicCloudDatabase;
 
             const query = {
