@@ -233,10 +233,6 @@
                     fieldName: 'status',
                     comparator: 'EQUALS',
                     fieldValue: { value: 'approved' }
-                }],
-                sortBy: [{
-                    fieldName: 'captureDate',
-                    ascending: false
                 }]
             };
 
@@ -257,8 +253,14 @@
 
             continuationMarker = response.continuationMarker || null;
 
+            const records = (response.records || []).sort((a, b) => {
+                const dateA = a.fields.captureDate ? a.fields.captureDate.value : 0;
+                const dateB = b.fields.captureDate ? b.fields.captureDate.value : 0;
+                return dateB - dateA;
+            });
+
             return {
-                records: response.records || [],
+                records,
                 hasMore: !!continuationMarker
             };
         }
