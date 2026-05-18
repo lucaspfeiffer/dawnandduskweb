@@ -1,5 +1,19 @@
 [
   {
+    "id": "67FDAE3D-1957-4443-8E28-973E64944A56",
+    "locationName": "Franklin",
+    "captureDate": 1777682402172,
+    "thumbnail": "photos/thumbnails/67FDAE3D-1957-4443-8E28-973E64944A56.webp",
+    "image": "photos/full/67FDAE3D-1957-4443-8E28-973E64944A56.webp"
+  },
+  {
+    "id": "D2ABAE55-A92E-405F-99F8-AFF35F4CC355",
+    "locationName": "Franklin",
+    "captureDate": 1777595445640,
+    "thumbnail": "photos/thumbnails/D2ABAE55-A92E-405F-99F8-AFF35F4CC355.webp",
+    "image": "photos/full/D2ABAE55-A92E-405F-99F8-AFF35F4CC355.webp"
+  },
+  {
     "id": "2CF1E259-3100-437D-8C2B-243AE3C6104B",
     "locationName": "Half Moon Bay",
     "captureDate": 1772330580713,
