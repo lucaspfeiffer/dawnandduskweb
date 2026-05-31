@@ -1,5 +1,12 @@
 [
   {
+    "id": "B9E6EBA4-A818-447B-8321-770C95E75245",
+    "locationName": "San Francisco",
+    "captureDate": 1780193730127,
+    "thumbnail": "photos/thumbnails/B9E6EBA4-A818-447B-8321-770C95E75245.webp",
+    "image": "photos/full/B9E6EBA4-A818-447B-8321-770C95E75245.webp"
+  },
+  {
     "id": "67FDAE3D-1957-4443-8E28-973E64944A56",
     "locationName": "Franklin",
     "captureDate": 1777682402172,
